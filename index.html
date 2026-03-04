@@ -1,0 +1,2125 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARYA — Atelier &amp; Kuru Temizleme</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg0: #07080f;
+      --bg1: #0e0f18;
+      --bg2: #15161f;
+      --bg3: #1c1d28;
+      --bg4: #252636;
+      --gold:      #c4973a;
+      --gold-hi:   #ddb55a;
+      --gold-lo:   #9a7428;
+      --gold-t08:  rgba(196,151,58,.08);
+      --gold-t15:  rgba(196,151,58,.15);
+      --gold-t30:  rgba(196,151,58,.30);
+      --tx1: #f0e8db;
+      --tx2: #a89e8e;
+      --tx3: #5e5a52;
+      --bdr:   rgba(196,151,58,.2);
+      --bdr-s: rgba(255,255,255,.05);
+      --bdr-m: rgba(255,255,255,.08);
+      --r-xs:   6px;
+      --r-sm:  10px;
+      --r-md:  16px;
+      --r-lg:  22px;
+      --r-xl:  30px;
+      --r-pill: 999px;
+      --sh-sm:  0 2px 8px  rgba(0,0,0,.45);
+      --sh-md:  0 8px 28px rgba(0,0,0,.55);
+      --sh-lg:  0 20px 56px rgba(0,0,0,.75);
+      --sh-gold: 0 0 40px rgba(196,151,58,.18);
+      --ease:     cubic-bezier(.4,0,.2,1);
+      --ease-out: cubic-bezier(0,0,.2,1);
+      --t1: 130ms;
+      --t2: 260ms;
+      --t3: 460ms;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg0);
+      color: var(--tx1);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9998; opacity: .6;
+    }
+    .serif { font-family: 'Playfair Display', Georgia, serif; }
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 4px; }
+
+    /* ── Switcher ── */
+    .switcher {
+      position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
+      z-index: 9999; background: rgba(14,15,24,.92);
+      backdrop-filter: blur(20px) saturate(1.4); -webkit-backdrop-filter: blur(20px) saturate(1.4);
+      border: 1px solid var(--bdr); border-radius: var(--r-pill); padding: 4px;
+      display: flex; gap: 2px; box-shadow: var(--sh-md), 0 0 0 1px rgba(255,255,255,.03);
+    }
+    .sw-btn {
+      display: flex; align-items: center; gap: 6px; padding: 7px 18px;
+      border: none; border-radius: var(--r-pill);
+      font-family: 'DM Sans', sans-serif; font-size: 12.5px; font-weight: 500;
+      background: transparent; color: var(--tx3); cursor: pointer;
+      transition: color var(--t1) var(--ease), background var(--t2) var(--ease), box-shadow var(--t2) var(--ease);
+      white-space: nowrap; letter-spacing: .3px;
+    }
+    .sw-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+    .sw-btn.on {
+      background: linear-gradient(135deg, var(--gold), var(--gold-hi));
+      color: var(--bg0); font-weight: 600; box-shadow: 0 4px 18px rgba(196,151,58,.42);
+    }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed; bottom: 22px; right: 22px; z-index: 99999;
+      background: var(--bg2); border-radius: var(--r-pill); padding: 11px 18px;
+      font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 9px;
+      box-shadow: var(--sh-lg); transform: translateY(70px) scale(.92); opacity: 0;
+      transition: all var(--t2) var(--ease); pointer-events: none; max-width: 300px;
+    }
+    #toast.show { transform: translateY(0) scale(1); opacity: 1; }
+    #toast.ok  { border: 1px solid var(--bdr); color: var(--gold); }
+    #toast.err { border: 1px solid rgba(224,80,80,.5); color: #e05050; }
+    #toast svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* ── Screens ── */
+    .screen { display: none; flex-direction: column; min-height: 100vh; }
+    .screen.on { display: flex; }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative; height: 420px; overflow: hidden; flex-shrink: 0;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1.3fr 1fr;
+    }
+    .hero-panel {
+      height: 100%; background-size: cover; background-repeat: no-repeat; position: relative;
+    }
+    .hero-panel:nth-child(1) {
+      background-image: url('https://images.unsplash.com/photo-1617137968427-85924c800a22?w=800&q=90');
+      background-position: center 30%; filter: brightness(.18) saturate(.4) contrast(1.1);
+    }
+    .hero-panel:nth-child(2) {
+      background-image: url('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=900&q=92');
+      background-position: center 12%; filter: brightness(.24) saturate(.4) contrast(1.15);
+    }
+    .hero-panel:nth-child(3) {
+      background-image: url('https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=800&q=90');
+      background-position: center 20%; filter: brightness(.18) saturate(.4) contrast(1.1);
+    }
+    .hero-panel:nth-child(1)::after,
+    .hero-panel:nth-child(2)::after {
+      content: ''; position: absolute; top: 8%; right: 0; bottom: 8%; width: 1px;
+      background: linear-gradient(180deg, transparent 0%, rgba(196,151,58,.5) 35%, rgba(196,151,58,.7) 50%, rgba(196,151,58,.5) 65%, transparent 100%);
+      z-index: 3;
+    }
+    .hero-bg::before {
+      content: ''; position: absolute; inset: 0; z-index: 2;
+      background:
+        radial-gradient(ellipse 50% 75% at 50% 45%, rgba(7,8,15,0) 0%, rgba(7,8,15,.1) 40%, rgba(7,8,15,.72) 100%),
+        linear-gradient(180deg, rgba(7,8,15,.6) 0%, rgba(7,8,15,.08) 28%, rgba(7,8,15,.08) 55%, rgba(7,8,15,.82) 80%, #07080f 100%);
+    }
+    .hero-bg::after {
+      content: ''; position: absolute; inset: 0; z-index: 2;
+      background: radial-gradient(ellipse 45% 30% at 50% 110%, rgba(196,151,58,.3) 0%, transparent 65%);
+    }
+    .hero-deco {
+      position: absolute; inset: 0; z-index: 3; display: flex; align-items: center; justify-content: center;
+      overflow: hidden; pointer-events: none;
+    }
+    .hero-deco svg { width: 580px; height: 580px; opacity: .05; }
+    .hero-cnt {
+      position: relative; z-index: 4; height: 100%; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding-top: 50px;
+    }
+    .brand-eyebrow {
+      font-size: 8px; letter-spacing: 5.5px; text-transform: uppercase; font-weight: 600;
+      color: rgba(196,151,58,.9); background: rgba(7,8,15,.55);
+      border: 1px solid rgba(196,151,58,.28); border-radius: var(--r-pill);
+      padding: 5px 16px; margin-bottom: 18px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    }
+    .brand {
+      font-family: 'Playfair Display', serif; font-size: clamp(72px, 14vw, 120px); font-weight: 400;
+      letter-spacing: clamp(20px, 4vw, 34px); text-transform: uppercase; line-height: 1;
+      text-align: center; color: var(--tx1); text-shadow: 0 2px 30px rgba(0,0,0,.8), 0 8px 60px rgba(0,0,0,.5);
+    }
+    .brand em {
+      background: linear-gradient(135deg, var(--gold-lo), var(--gold-hi) 55%, var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      font-style: italic; filter: drop-shadow(0 0 20px rgba(196,151,58,.45));
+    }
+    .brand-divider {
+      width: 50px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 14px auto; opacity: .8;
+    }
+    .brand-sub {
+      font-size: 8.5px; letter-spacing: 6px; color: rgba(240,232,219,.45);
+      text-transform: uppercase; font-weight: 500; margin-bottom: 22px;
+    }
+    .brand-cta {
+      display: inline-flex; align-items: center; gap: 8px; padding: 10px 24px;
+      background: rgba(7,8,15,.62); border: 1px solid rgba(196,151,58,.32);
+      border-radius: var(--r-pill); color: rgba(240,232,219,.75); font-size: 11.5px;
+      font-weight: 500; letter-spacing: .8px; text-transform: uppercase;
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); cursor: default;
+      box-shadow: 0 8px 24px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05);
+    }
+    .brand-cta span {
+      width: 4px; height: 4px; border-radius: 50%; background: var(--gold);
+      display: inline-block; box-shadow: 0 0 6px var(--gold);
+    }
+
+    /* ── Booking card ── */
+    .booking-wrap {
+      max-width: 900px; margin: 0 auto; padding: 0 14px 60px; width: 100%;
+      margin-top: -32px; position: relative; z-index: 3;
+    }
+    .card {
+      background: rgba(14,15,24,.97); border: 1px solid var(--bdr);
+      border-radius: var(--r-xl); box-shadow: var(--sh-lg), 0 0 0 1px rgba(255,255,255,.025);
+      overflow: hidden; position: relative; backdrop-filter: blur(2px);
+    }
+    .card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: .55;
+    }
+    .card-head {
+      padding: 16px 22px; display: flex; flex-wrap: wrap;
+      align-items: center; justify-content: space-between; gap: 12px;
+      border-bottom: 1px solid var(--bdr-s); background: rgba(21,22,31,.6);
+    }
+    .card-title {
+      font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 400;
+      color: var(--tx1); display: flex; align-items: center; gap: 9px;
+    }
+    .card-title svg { width: 17px; height: 17px; color: var(--gold); }
+    .step-nav { display: flex; align-items: center; gap: 6px; }
+    .step-item {
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      cursor: default; transition: all var(--t2) var(--ease);
+    }
+    .step-num {
+      width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--bdr-s);
+      background: var(--bg3); display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 600; color: var(--tx3);
+      transition: all var(--t2) var(--ease);
+    }
+    .step-lbl {
+      font-size: 9px; font-weight: 500; letter-spacing: .5px; text-transform: uppercase;
+      color: var(--tx3); transition: color var(--t2) var(--ease);
+    }
+    .step-item.on .step-num {
+      background: var(--gold); border-color: var(--gold); color: var(--bg0);
+      box-shadow: 0 0 14px rgba(196,151,58,.45);
+    }
+    .step-item.on .step-lbl { color: var(--gold); }
+    .step-item.done .step-num {
+      background: var(--gold-t08); border-color: var(--gold-t30); color: var(--gold);
+    }
+    .step-item.done .step-lbl { color: var(--tx3); }
+    .step-sep { width: 18px; height: 1px; background: var(--bdr-s); margin-bottom: 14px; }
+    .pay-note {
+      display: flex; align-items: center; gap: 10px; background: var(--gold-t08);
+      border-left: 2px solid var(--gold); margin: 14px 22px 0; padding: 9px 14px;
+      border-radius: 0 var(--r-xs) var(--r-xs) 0; font-size: 12px; color: var(--tx2);
+    }
+    .pay-note svg { width: 14px; height: 14px; color: var(--gold); flex-shrink: 0; }
+    .pay-note strong { color: var(--gold-hi); font-weight: 600; }
+    .step-content { display: none; padding: 22px; }
+    .step-content.on { display: block; animation: fadeUp var(--t2) var(--ease-out); }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .sec-label {
+      font-size: 9.5px; text-transform: uppercase; letter-spacing: 3px; color: var(--tx3);
+      font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+    }
+    .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--bdr-s); }
+
+    /* ── Service grid ── */
+    .hizmet-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+    }
+    @media (min-width: 520px) { .hizmet-grid { grid-template-columns: repeat(3, 1fr); } }
+    .hizmet-card {
+      background: var(--bg2); border: 1px solid var(--bdr-s); border-radius: var(--r-lg);
+      overflow: hidden; cursor: pointer; position: relative;
+      transition: transform var(--t2) var(--ease), border-color var(--t2) var(--ease), box-shadow var(--t2) var(--ease);
+    }
+    .hizmet-card:hover {
+      transform: translateY(-2px); border-color: var(--bdr-m); box-shadow: var(--sh-sm);
+    }
+    .hizmet-card.sel { border-color: var(--gold); box-shadow: 0 0 0 1px rgba(196,151,58,.25), var(--sh-sm); }
+    .hc-check {
+      position: absolute; top: 8px; right: 8px; width: 22px; height: 22px; background: var(--gold);
+      border-radius: 50%; display: none; align-items: center; justify-content: center;
+      box-shadow: 0 2px 8px rgba(196,151,58,.5); animation: popIn var(--t1) var(--ease); z-index: 2;
+    }
+    .hizmet-card.sel .hc-check { display: flex; }
+    .hc-check svg { width: 11px; height: 11px; color: var(--bg0); }
+    @keyframes popIn {
+      from { transform: scale(.4); opacity: 0; }
+      to   { transform: scale(1);  opacity: 1; }
+    }
+    .hc-img-wrap { position: relative; height: 115px; overflow: hidden; }
+    .hc-img {
+      width: 100%; height: 100%; object-fit: cover; filter: brightness(.65) saturate(.8);
+      transition: filter var(--t2) var(--ease), transform var(--t3) var(--ease);
+    }
+    .hizmet-card:hover .hc-img { filter: brightness(.82) saturate(.9); transform: scale(1.06); }
+    .hc-img-wrap::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 45%;
+      background: linear-gradient(0deg, var(--bg2), transparent);
+    }
+    .hc-body { padding: 10px 12px 12px; }
+    .hc-name { font-family: 'Playfair Display', serif; font-weight: 400; font-size: 14px; color: var(--tx1); line-height: 1.3; }
+    .hc-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; }
+    .hc-dur { font-size: 11px; color: var(--tx3); display: flex; align-items: center; gap: 3px; }
+    .hc-dur svg { width: 9px; height: 9px; }
+    .hc-price { font-size: 14px; color: var(--gold); font-weight: 700; letter-spacing: .3px; }
+    .btn-toggle {
+      width: 100%; margin-top: 8px; padding: 5px; border: 1px solid var(--bdr-s);
+      background: transparent; color: var(--tx3); border-radius: var(--r-pill); cursor: pointer;
+      font-family: 'DM Sans', sans-serif; font-size: 10.5px; font-weight: 600; letter-spacing: .8px;
+      text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 5px;
+      transition: all var(--t1) var(--ease);
+    }
+    .btn-toggle svg { width: 9px; height: 9px; }
+    .btn-toggle:hover { border-color: var(--bdr-m); color: var(--tx2); }
+    .btn-toggle.on { background: var(--gold); border-color: var(--gold); color: var(--bg0); }
+    .sel-bar { margin-top: 18px; background: var(--gold-t08); border: 1px solid var(--bdr); border-radius: var(--r-md); padding: 12px 14px; display: none; }
+    .sel-bar.show { display: block; }
+    .sel-bar-lbl { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: var(--tx3); font-weight: 600; margin-bottom: 8px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip { background: var(--gold-t15); border: 1px solid var(--gold-t30); border-radius: var(--r-pill); padding: 3px 10px; font-size: 11px; color: var(--gold); font-weight: 500; }
+
+    /* ── Calendar ── */
+    .takvim-grid { display: grid; grid-template-columns: 1fr; gap: 22px; }
+    @media (min-width: 520px) { .takvim-grid { grid-template-columns: 1fr 1fr; } }
+    .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .cal-month { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 400; }
+    .cal-arr {
+      width: 30px; height: 30px; border: 1px solid var(--bdr-m); border-radius: 8px;
+      background: transparent; color: var(--tx2); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all var(--t1) var(--ease);
+    }
+    .cal-arr:hover { border-color: var(--bdr); color: var(--tx1); background: var(--bg3); }
+    .cal-arr svg { width: 13px; height: 13px; }
+    .day-names {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin-bottom: 6px;
+    }
+    .day-name {
+      text-align: center; font-size: 8.5px; text-transform: uppercase; letter-spacing: 1px;
+      color: var(--tx3); font-weight: 600; padding: 4px 0;
+    }
+    .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+    .day {
+      aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+      border-radius: 7px; cursor: pointer; font-size: 12.5px; font-weight: 400; color: var(--tx2);
+      transition: all var(--t1) var(--ease); border: 1px solid transparent;
+    }
+    .day:hover:not(.empty):not(.disabled) { background: var(--bg3); border-color: var(--bdr-m); }
+    .day.empty { pointer-events: none; }
+    .day.disabled { opacity: .22; pointer-events: none; }
+    .day.today { border-color: var(--gold-t30); color: var(--gold); }
+    .day.sel { background: var(--gold); color: var(--bg0); font-weight: 700; border-color: var(--gold); box-shadow: 0 3px 12px rgba(196,151,58,.42); }
+    .time-sec-title { font-family: 'Playfair Display', serif; font-size: 16px; margin-bottom: 12px; color: var(--tx1); }
+    .times-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    @media (min-width: 360px) { .times-grid { grid-template-columns: repeat(4, 1fr); } }
+    .t-slot {
+      padding: 9px 4px; background: var(--bg2); border: 1px solid var(--bdr-s); border-radius: 8px;
+      text-align: center; cursor: pointer; font-size: 12px; font-weight: 500; color: var(--tx2);
+      transition: all var(--t1) var(--ease);
+    }
+    .t-slot:hover { background: var(--bg3); border-color: var(--bdr-m); color: var(--tx1); }
+    .t-slot.sel { background: var(--gold-t15); border-color: var(--gold); color: var(--gold); font-weight: 600; }
+
+    /* ── Forms ── */
+    .finput {
+      width: 100%; padding: 13px 15px; background: var(--bg2); border: 1px solid var(--bdr-s);
+      border-radius: var(--r-md); color: var(--tx1); font-family: 'DM Sans', sans-serif;
+      font-size: 14px; transition: border-color var(--t1) var(--ease), box-shadow var(--t1) var(--ease);
+      outline: none; appearance: none;
+    }
+    .finput:focus { border-color: rgba(196,151,58,.45); box-shadow: 0 0 0 3px rgba(196,151,58,.07); }
+    .finput::placeholder { color: var(--tx3); }
+    select.finput { cursor: pointer; }
+    .field-stack { display: flex; flex-direction: column; gap: 10px; }
+    .summary-card { background: var(--bg2); border: 1px solid var(--bdr-s); border-radius: var(--r-lg); padding: 16px; margin-top: 16px; }
+    .sum-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; font-size: 13px; }
+    .sum-row:not(:last-child) { border-bottom: 1px solid var(--bdr-s); }
+    .sum-lbl { display: flex; align-items: center; gap: 6px; color: var(--tx3); }
+    .sum-lbl svg { width: 11px; height: 11px; }
+    .sum-val { color: var(--tx1); font-weight: 500; }
+    .sum-row.total .sum-val { color: var(--gold); font-size: 16px; font-weight: 600; }
+    .sum-note { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--bdr); font-size: 11px; color: var(--tx3); display: flex; align-items: center; gap: 6px; }
+    .sum-note svg { width: 11px; height: 11px; color: var(--gold); }
+
+    /* ── Success ── */
+    .success-wrap { text-align: center; padding: 36px 16px; }
+    .success-ring {
+      width: 74px; height: 74px; margin: 0 auto 20px; border: 1px solid var(--bdr);
+      border-radius: 50%; background: var(--gold-t08); display: flex; align-items: center;
+      justify-content: center; animation: glow 2s ease-in-out infinite alternate;
+    }
+    .success-ring svg { width: 34px; height: 34px; color: var(--gold); }
+    @keyframes glow {
+      from { box-shadow: 0 0 0 0 rgba(196,151,58,.3); }
+      to   { box-shadow: 0 0 24px 8px rgba(196,151,58,.12); }
+    }
+    .success-no-card { background: var(--bg2); border: 1px solid var(--bdr); border-radius: var(--r-lg); padding: 18px 24px; margin: 20px auto; max-width: 240px; }
+    .success-no-lbl { font-size: 9.5px; text-transform: uppercase; letter-spacing: 2px; color: var(--tx3); margin-bottom: 6px; }
+    .success-no { font-family: 'Playfair Display', serif; font-size: 30px; color: var(--gold); letter-spacing: 2px; }
+
+    /* ── Card footer ── */
+    .card-footer {
+      padding: 14px 22px; border-top: 1px solid var(--bdr-s);
+      display: flex; align-items: center; justify-content: flex-end; gap: 10px;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 7px; padding: 10px 22px;
+      border-radius: var(--r-pill); border: none; font-family: 'DM Sans', sans-serif;
+      font-weight: 600; font-size: 13px; cursor: pointer;
+      transition: all var(--t2) var(--ease); letter-spacing: .2px;
+    }
+    .btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold-hi));
+      color: var(--bg0); box-shadow: 0 6px 20px rgba(196,151,58,.28);
+    }
+    .btn-primary:hover { box-shadow: 0 8px 28px rgba(196,151,58,.44); transform: translateY(-1px); }
+    .btn-primary:active { transform: none; box-shadow: none; }
+    .btn-ghost { background: transparent; border: 1px solid var(--bdr-m); color: var(--tx3); }
+    .btn-ghost:hover { border-color: var(--bdr); color: var(--tx2); background: var(--bg2); }
+    .btn-danger { background: transparent; border: 1px solid rgba(224,80,80,.25); color: #e05050; }
+    .btn-danger:hover { background: rgba(224,80,80,.08); }
+
+    /* ── Admin layout ── */
+    .admin-shell { display: flex; flex-direction: column; min-height: 100vh; }
+    .admin-topbar {
+      display: flex; overflow-x: auto; gap: 3px; background: rgba(10,11,20,.95);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--bdr-s); padding: 10px 14px; flex-shrink: 0;
+      scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    }
+    .admin-topbar::-webkit-scrollbar { display: none; }
+    .nav-item {
+      display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px;
+      border-radius: var(--r-pill); color: var(--tx3); cursor: pointer;
+      font-size: 12px; font-weight: 500; letter-spacing: .2px;
+      border: 1px solid transparent; white-space: nowrap;
+      transition: all var(--t1) var(--ease);
+    }
+    .nav-item svg { width: 12px; height: 12px; }
+    .nav-item.on { background: var(--gold-t08); color: var(--gold); border-color: var(--gold-t30); }
+    .nav-item:hover:not(.on) { background: var(--bg2); color: var(--tx2); }
+    .admin-main { flex: 1; padding: 22px 18px; overflow-x: hidden; }
+    .page-hdr { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 22px; }
+    .page-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 400; color: var(--tx1); }
+    .stats-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 26px; scrollbar-width: none; }
+    .stats-row::-webkit-scrollbar { display: none; }
+    .stat {
+      background: var(--bg1); border: 1px solid var(--bdr-s); border-radius: var(--r-lg);
+      padding: 15px 18px; min-width: 124px; flex-shrink: 0; position: relative; overflow: hidden;
+      transition: border-color var(--t1) var(--ease);
+    }
+    .stat::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0;
+      transition: opacity var(--t2) var(--ease);
+    }
+    .stat:hover { border-color: var(--bdr); }
+    .stat:hover::after { opacity: .6; }
+    .stat-lbl { font-size: 9.5px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--tx3); font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
+    .stat-lbl svg { width: 10px; height: 10px; }
+    .stat-val { font-family: 'Playfair Display', serif; font-size: 30px; color: var(--gold); line-height: 1; }
+    .stat-sub { font-size: 10px; color: var(--tx3); margin-top: 3px; }
+    .tbl-wrap { background: var(--bg1); border: 1px solid var(--bdr-s); border-radius: var(--r-lg); overflow: hidden; }
+    .tbl-scroll { overflow-x: auto; }
+    .tbl { width: 100%; min-width: 560px; border-collapse: collapse; }
+    .tbl thead th {
+      padding: 11px 15px; text-align: left; font-size: 9.5px; text-transform: uppercase;
+      letter-spacing: 1.5px; color: var(--tx3); font-weight: 600; background: var(--bg2);
+      border-bottom: 1px solid var(--bdr-s);
+    }
+    .tbl tbody tr { border-bottom: 1px solid var(--bdr-s); transition: background var(--t1) var(--ease); }
+    .tbl tbody tr:last-child { border-bottom: none; }
+    .tbl tbody tr:hover { background: rgba(255,255,255,.015); }
+    .tbl td { padding: 11px 15px; font-size: 13px; color: var(--tx1); vertical-align: middle; }
+    .tbl td small { color: var(--tx3); font-size: 11px; display: block; margin-top: 2px; }
+    .badge { display: inline-flex; align-items: center; gap: 3px; padding: 3px 9px; border-radius: var(--r-pill); font-size: 11px; font-weight: 600; }
+    .badge svg { width: 9px; height: 9px; }
+    .badge-paid { background: var(--gold-t08); color: var(--gold); border: 1px solid var(--gold-t30); }
+    .badge-pending { background: rgba(224,80,80,.08); color: #e05050; border: 1px solid rgba(224,80,80,.18); }
+    .icon-btn {
+      width: 29px; height: 29px; border: 1px solid var(--bdr-s); border-radius: 8px;
+      background: transparent; cursor: pointer; display: inline-flex;
+      align-items: center; justify-content: center; color: var(--tx3);
+      transition: all var(--t1) var(--ease);
+    }
+    .icon-btn svg { width: 12px; height: 12px; }
+    .icon-btn:hover { border-color: var(--bdr); color: var(--tx2); background: var(--bg3); }
+    .icon-btn.wa { border-color: rgba(37,211,102,.25); color: #25d366; }
+    .icon-btn.wa:hover { background: rgba(37,211,102,.08); }
+    .icon-btn.danger { border-color: rgba(224,80,80,.25); color: #e05050; }
+    .icon-btn.danger:hover { background: rgba(224,80,80,.08); }
+    .actions { display: flex; align-items: center; gap: 4px; }
+    .pay-btn {
+      display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px;
+      border-radius: var(--r-pill); font-size: 11px; font-weight: 600; cursor: pointer;
+      border: 1px solid var(--bdr-s); background: transparent; color: var(--tx3);
+      font-family: 'DM Sans', sans-serif; transition: all var(--t1) var(--ease);
+    }
+    .pay-btn:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-t08); }
+    .pay-btn.paid { border-color: var(--gold-t30); color: var(--gold); background: var(--gold-t08); }
+    .search-wrap { position: relative; width: 200px; }
+    .search-wrap svg {
+      position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+      width: 12px; height: 12px; color: var(--tx3); pointer-events: none;
+    }
+    .search-wrap .finput { padding-left: 30px; font-size: 13px; }
+    .pagination { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 14px; border-top: 1px solid var(--bdr-s); }
+    .pg-btn {
+      width: 30px; height: 30px; border: 1px solid var(--bdr-s); border-radius: 7px;
+      background: transparent; color: var(--tx2); cursor: pointer; display: flex;
+      align-items: center; justify-content: center; font-size: 12px;
+      font-family: 'DM Sans', sans-serif; transition: all var(--t1) var(--ease);
+    }
+    .pg-btn:disabled { opacity: .25; cursor: default; pointer-events: none; }
+    .pg-btn:not(:disabled):hover { border-color: var(--bdr); color: var(--tx1); background: var(--bg3); }
+    .pg-btn svg { width: 12px; height: 12px; }
+    .pg-info { font-size: 11.5px; color: var(--tx3); padding: 0 4px; }
+    .sec-title { font-family: 'Playfair Display', serif; font-size: 17px; margin-bottom: 14px; color: var(--tx1); }
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--tx3); }
+    .empty-state svg { width: 36px; height: 36px; margin: 0 auto 10px; opacity: .25; }
+    .empty-state p { font-size: 13px; }
+    .settings-block { background: var(--bg1); border: 1px solid var(--bdr-s); border-radius: var(--r-lg); padding: 22px; }
+    .settings-block h3 { font-family: 'Playfair Display', serif; font-size: 16px; margin-bottom: 12px; color: var(--tx1); }
+    .settings-block p { font-size: 13px; color: var(--tx2); margin-bottom: 6px; }
+    .settings-block strong { color: var(--tx1); font-weight: 600; }
+
+    /* ── Modals ── */
+    .modal-bg {
+      position: fixed; inset: 0; background: rgba(7,8,15,.87);
+      backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3);
+      z-index: 10000; display: flex; align-items: center; justify-content: center;
+      padding: 16px; opacity: 0; pointer-events: none;
+      transition: opacity var(--t2) var(--ease);
+    }
+    .modal-bg.open { opacity: 1; pointer-events: all; }
+    .modal-box {
+      background: var(--bg1); border: 1px solid var(--bdr); border-radius: var(--r-xl);
+      padding: 26px; width: 100%; max-width: 400px;
+      box-shadow: var(--sh-lg), var(--sh-gold); transform: scale(.95) translateY(10px);
+      transition: transform var(--t2) var(--ease); position: relative; overflow: hidden;
+    }
+    .modal-box::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: .5;
+    }
+    .modal-bg.open .modal-box { transform: scale(1) translateY(0); }
+    .modal-title { font-family: 'Playfair Display', serif; font-size: 21px; font-weight: 400; margin-bottom: 5px; }
+    .modal-sub { font-size: 12.5px; color: var(--tx3); margin-bottom: 18px; }
+    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; }
+    .err-hint {
+      background: rgba(224,80,80,.07); border: 1px solid rgba(224,80,80,.2);
+      border-radius: var(--r-xs); color: #e05050; font-size: 12px;
+      padding: 8px 12px; margin-bottom: 12px; display: none; align-items: center; gap: 6px;
+    }
+    .err-hint.show { display: flex; }
+    .err-hint svg { width: 12px; height: 12px; flex-shrink: 0; }
+    #modalLogin .modal-box { text-align: center; }
+    #modalLogin .modal-actions { justify-content: center; }
+    #modalSetPassword .modal-box { text-align: center; }
+    #modalSetPassword .modal-actions { justify-content: center; }
+
+    /* ── Upload zone ── */
+    .upload-zone {
+      border: 1px dashed var(--bdr); border-radius: var(--r-md); padding: 18px 12px;
+      text-align: center; cursor: pointer; transition: border-color var(--t1) var(--ease), background var(--t1) var(--ease);
+      position: relative;
+    }
+    .upload-zone:hover, .upload-zone.drag { border-color: var(--gold); background: var(--gold-t08); }
+    .upload-zone input[type=file] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .upload-zone-icon { color: var(--gold); margin-bottom: 6px; }
+    .upload-zone-icon svg { width: 26px; height: 26px; }
+    .upload-zone p { font-size: 12px; color: var(--tx3); line-height: 1.5; }
+    .upload-zone strong { color: var(--tx2); }
+    .img-preview-wrap {
+      display: none; border-radius: var(--r-md); overflow: hidden; position: relative; height: 130px;
+    }
+    .img-preview-wrap.show { display: block; }
+    .img-preview-wrap img { width: 100%; height: 100%; object-fit: cover; filter: brightness(.75); }
+    .img-preview-remove {
+      position: absolute; top: 7px; right: 7px; width: 26px; height: 26px;
+      background: rgba(7,8,15,.85); border: 1px solid rgba(255,255,255,.15); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--tx2);
+      transition: color var(--t1) var(--ease), border-color var(--t1) var(--ease);
+    }
+    .img-preview-remove:hover { color: #e05050; border-color: rgba(224,80,80,.5); }
+    .img-preview-remove svg { width: 12px; height: 12px; }
+    .url-input-row { display: flex; gap: 6px; align-items: center; }
+    .url-input-row .finput { font-size: 12px; }
+    .url-load-btn {
+      flex-shrink: 0; padding: 0 12px; height: 44px; border: 1px solid var(--bdr-m);
+      border-radius: var(--r-md); background: var(--bg3); color: var(--tx2);
+      font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; cursor: pointer;
+      white-space: nowrap; transition: all var(--t1) var(--ease);
+    }
+    .url-load-btn:hover { border-color: var(--bdr); color: var(--tx1); background: var(--bg4); }
+    .img-src-divider {
+      display: flex; align-items: center; gap: 8px; font-size: 10px; color: var(--tx3);
+      text-transform: uppercase; letter-spacing: 1.5px; margin: 2px 0;
+    }
+    .img-src-divider::before, .img-src-divider::after { content: ''; flex: 1; height: 1px; background: var(--bdr-s); }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+  </style>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+<!-- ── Switcher ── -->
+<div class="switcher">
+  <button class="sw-btn on" id="swMusteri" aria-label="Müşteri görünümüne geç">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+    Müşteri
+  </button>
+  <button class="sw-btn" id="swAdmin" aria-label="Yönetim paneline geç">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M2 12h2M20 12h2"/></svg>
+    Yönetim
+  </button>
+</div>
+
+<!-- ── Toast ── -->
+<div id="toast" role="status" aria-live="polite"></div>
+
+<!-- ════════════════════════════════════════
+     MÜŞTERİ EKRANI
+     ════════════════════════════════════════ -->
+<div class="screen on" id="musteri-screen">
+
+  <div class="hero" role="banner">
+    <div class="hero-bg" aria-hidden="true">
+      <div class="hero-panel"></div>
+      <div class="hero-panel"></div>
+      <div class="hero-panel"></div>
+      <div class="hero-deco">
+        <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="200" cy="200" r="80"  stroke="#c4973a" stroke-width=".6"/>
+          <circle cx="200" cy="200" r="130" stroke="#c4973a" stroke-width=".4"/>
+          <circle cx="200" cy="200" r="180" stroke="#c4973a" stroke-width=".3"/>
+          <circle cx="200" cy="200" r="230" stroke="#c4973a" stroke-width=".2"/>
+          <line x1="0" y1="200" x2="400" y2="200" stroke="#c4973a" stroke-width=".5"/>
+          <line x1="200" y1="0" x2="200" y2="400" stroke="#c4973a" stroke-width=".5"/>
+          <line x1="0" y1="0"   x2="400" y2="400" stroke="#c4973a" stroke-width=".3"/>
+          <line x1="400" y1="0" x2="0"   y2="400" stroke="#c4973a" stroke-width=".3"/>
+        </svg>
+      </div>
+    </div>
+    <div class="hero-cnt">
+      <div class="brand-eyebrow">Bursa'nın Prestij Atölyesi</div>
+      <h1 class="brand">A<em>R</em>YA</h1>
+      <div class="brand-divider" aria-hidden="true"></div>
+      <div class="brand-sub">Haute Couture &amp; Kuru Temizleme</div>
+      <div class="brand-cta" aria-label="Premium Tekstil Bakımı">
+        <span aria-hidden="true"></span>
+        Premium Tekstil Bakımı
+      </div>
+    </div>
+  </div>
+
+  <main class="booking-wrap">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title" style="font-size:17px;letter-spacing:.5px;">Randevu Al</div>
+        <nav class="step-nav" aria-label="Randevu adımları">
+          <div class="step-item on" id="sn1" aria-current="step"><div class="step-num">1</div><div class="step-lbl">Hizmet</div></div>
+          <div class="step-sep" aria-hidden="true"></div>
+          <div class="step-item" id="sn2"><div class="step-num">2</div><div class="step-lbl">Zaman</div></div>
+          <div class="step-sep" aria-hidden="true"></div>
+          <div class="step-item" id="sn3"><div class="step-num">3</div><div class="step-lbl">Bilgi</div></div>
+          <div class="step-sep" aria-hidden="true"></div>
+          <div class="step-item" id="sn5">
+            <div class="step-num">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="step-lbl">Tamam</div>
+          </div>
+        </nav>
+      </div>
+
+      <div class="pay-note" role="note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span><strong>Ödeme bilgisi:</strong> Tüm ödemeler hizmet tesliminde nakit veya kart ile alınır. Ön ödeme talep edilmez.</span>
+      </div>
+
+      <!-- Adım 1: Hizmet Seçimi -->
+      <section class="step-content on" id="s1" aria-labelledby="step1-title">
+        <div class="sec-label" id="step1-title">Hizmet Seçin</div>
+        <div class="hizmet-grid" id="hizmetGrid" role="list"></div>
+        <div class="sel-bar" id="selBar" aria-live="polite">
+          <div class="sel-bar-lbl">Seçilenler</div>
+          <div class="chips" id="selChips"></div>
+        </div>
+      </section>
+
+      <!-- Adım 2: Tarih ve Saat -->
+      <section class="step-content" id="s2" aria-labelledby="step2-title">
+        <div class="sec-label" id="step2-title">Tarih &amp; Saat Seçin</div>
+        <div class="takvim-grid">
+          <div>
+            <div class="cal-nav">
+              <button class="cal-arr" id="calPrev" aria-label="Önceki ay">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <span class="cal-month serif" id="calMonth" aria-live="polite">Ocak 2025</span>
+              <button class="cal-arr" id="calNext" aria-label="Sonraki ay">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+            <div class="day-names" aria-hidden="true">
+              <div class="day-name">Pt</div>
+              <div class="day-name">Sa</div>
+              <div class="day-name">Ça</div>
+              <div class="day-name">Pe</div>
+              <div class="day-name">Cu</div>
+              <div class="day-name">Ct</div>
+              <div class="day-name">Pz</div>
+            </div>
+            <div class="days-grid" id="daysGrid" role="grid" aria-label="Takvim"></div>
+          </div>
+          <div>
+            <div class="time-sec-title serif">Müsait Saatler</div>
+            <div class="times-grid" id="timesGrid" role="list" aria-label="Saat seçenekleri"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Adım 3: Bilgi ve Özet -->
+      <section class="step-content" id="s3" aria-labelledby="step3-title">
+        <div class="sec-label" id="step3-title">İletişim Bilgileri</div>
+        <div class="field-stack">
+          <input type="text"  class="finput" id="musteriAd"   placeholder="Ad Soyad *"               autocomplete="name"  aria-label="Ad Soyad" aria-required="true">
+          <input type="tel"   class="finput" id="musteriTel"  placeholder="Telefon (05xxxxxxxxx) *"  autocomplete="tel"   aria-label="Telefon numarası" aria-required="true">
+          <input type="email" class="finput" id="musteriMail" placeholder="E-posta (isteğe bağlı)"   autocomplete="email" aria-label="E-posta adresi">
+        </div>
+        <div class="summary-card" aria-label="Randevu özeti">
+          <div class="sum-row">
+            <span class="sum-lbl">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+              Hizmetler
+            </span>
+            <span class="sum-val" id="ozHizmet">—</span>
+          </div>
+          <div class="sum-row">
+            <span class="sum-lbl">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Tarih
+            </span>
+            <span class="sum-val" id="ozTarih">—</span>
+          </div>
+          <div class="sum-row">
+            <span class="sum-lbl">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Saat
+            </span>
+            <span class="sum-val" id="ozSaat">—</span>
+          </div>
+          <div class="sum-row total">
+            <span class="sum-lbl">Toplam Tutar</span>
+            <span class="sum-val" id="ozToplam">0 TL</span>
+          </div>
+          <div class="sum-note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+            Ödeme hizmet tesliminde yapılır. Şu an tahsilat alınmaz.
+          </div>
+        </div>
+      </section>
+
+      <!-- Adım 5: Başarı -->
+      <section class="step-content" id="s5">
+        <div class="success-wrap">
+          <div class="success-ring" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h2 class="serif" style="font-size:25px;font-weight:400;margin-bottom:6px;">Randevu Oluşturuldu</h2>
+          <p style="color:var(--tx3);font-size:13px;">Bilgileriniz kaydedildi.</p>
+          <div class="success-no-card">
+            <div class="success-no-lbl">Randevu Numaranız</div>
+            <div class="success-no" id="randevuNo" aria-live="polite">ARY-0000</div>
+          </div>
+          <button class="btn btn-primary" id="btnYeniRandevu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+            Yeni Randevu Al
+          </button>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <div class="card-footer" id="cardFooter">
+        <button class="btn btn-ghost" id="btnGeri" style="display:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+          Geri
+        </button>
+        <button class="btn btn-primary" id="btnDevam">
+          Devam
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ════════════════════════════════════════
+     ADMIN EKRANI
+     ════════════════════════════════════════ -->
+<div class="screen" id="admin-screen">
+  <div class="admin-shell">
+    <nav class="admin-topbar" id="adminNav" aria-label="Admin navigasyonu">
+      <div class="nav-item on" data-page="dashboard" role="button" tabindex="0" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Pano
+      </div>
+      <div class="nav-item" data-page="randevular" role="button" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Randevular
+      </div>
+      <div class="nav-item" data-page="hizmetler" role="button" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+        Hizmetler
+      </div>
+      <div class="nav-item" data-page="musteriler" role="button" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Müşteriler
+      </div>
+      <div class="nav-item" data-page="ayarlar" role="button" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M2 12h2M20 12h2"/></svg>
+        Ayarlar
+      </div>
+    </nav>
+    <div class="admin-main" id="adminContent" role="main"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     MODALLER
+     ════════════════════════════════════════ -->
+
+<!-- Login Modal -->
+<div class="modal-bg" id="modalLogin" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+  <div class="modal-box">
+    <div style="width:50px;height:50px;border:1px solid var(--bdr);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;background:var(--gold-t08);" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" width="22" height="22"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+    </div>
+    <div class="modal-title" id="loginTitle">Admin Girişi</div>
+    <div class="modal-sub">Yönetim paneline erişmek için şifrenizi girin</div>
+    <div class="err-hint" id="loginErr" role="alert">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Hatalı şifre, lütfen tekrar deneyin.
+    </div>
+    <input type="password" class="finput" id="loginPass" placeholder="Şifre" autocomplete="current-password" aria-label="Admin şifresi">
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="loginCancel">İptal</button>
+      <button class="btn btn-primary" id="loginSubmit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
+        Giriş Yap
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Set Password Modal -->
+<div class="modal-bg" id="modalSetPassword" role="dialog" aria-modal="true" aria-labelledby="setPassTitle">
+  <div class="modal-box">
+    <div style="width:50px;height:50px;border:1px solid var(--bdr);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;background:var(--gold-t08);" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" width="22" height="22"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+    </div>
+    <div class="modal-title" id="setPassTitle">Admin Şifresi Belirleyin</div>
+    <div class="modal-sub">İlk giriş için yeni bir şifre oluşturun</div>
+    <div class="err-hint" id="setPassErr" role="alert">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Şifreler uyuşmuyor veya geçersiz.
+    </div>
+    <input type="password" class="finput" id="setPass1" placeholder="Yeni şifre (min. 4 karakter)" autocomplete="new-password" aria-label="Yeni şifre">
+    <input type="password" class="finput" id="setPass2" placeholder="Şifre tekrar" autocomplete="new-password" style="margin-top:8px;" aria-label="Şifre tekrar">
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="setPassCancel">İptal</button>
+      <button class="btn btn-primary" id="setPassSubmit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        Kaydet ve Giriş Yap
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Reschedule Modal -->
+<div class="modal-bg" id="modalTasi" role="dialog" aria-modal="true" aria-labelledby="tasiTitle">
+  <div class="modal-box">
+    <div class="modal-title" id="tasiTitle">Randevu Taşı</div>
+    <div class="modal-sub">Yeni tarih ve saat seçin</div>
+    <div class="field-stack">
+      <input type="date" id="tasiTarih" class="finput" aria-label="Yeni tarih">
+      <select id="tasiSaat" class="finput" aria-label="Yeni saat">
+        <option>09:00</option><option>09:30</option><option>10:00</option>
+        <option>10:30</option><option>11:00</option><option>11:30</option>
+        <option>13:00</option><option>13:30</option><option>14:00</option>
+        <option>14:30</option><option>15:00</option><option>15:30</option>
+        <option>16:00</option><option>16:30</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="tasiCancel">İptal</button>
+      <button class="btn btn-primary" id="tasiConfirm">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v14a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Taşı
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Service Add/Edit Modal -->
+<div class="modal-bg" id="modalHizmet" role="dialog" aria-modal="true" aria-labelledby="mhTitle">
+  <div class="modal-box" style="max-width:440px;">
+    <div class="modal-title" id="mhTitle">Yeni Hizmet</div>
+    <div class="modal-sub">Hizmet bilgilerini eksiksiz doldurun</div>
+    <div class="field-stack">
+      <div>
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--tx3);font-weight:600;margin-bottom:6px;">HİZMET ADI *</div>
+        <input type="text" class="finput" id="mhAd" placeholder="örn: Paça Boyu" aria-label="Hizmet adı" aria-required="true">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div>
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--tx3);font-weight:600;margin-bottom:6px;">FİYAT (₺) *</div>
+          <input type="number" class="finput" id="mhFiyat" placeholder="0" min="0" step="1" aria-label="Fiyat" aria-required="true">
+        </div>
+        <div>
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--tx3);font-weight:600;margin-bottom:6px;">SÜRE *</div>
+          <input type="text" class="finput" id="mhSure" placeholder="45 dk" aria-label="Süre" aria-required="true">
+        </div>
+      </div>
+      <div>
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--tx3);font-weight:600;margin-bottom:8px;">GÖRSEL</div>
+        <div class="img-preview-wrap" id="mhPreviewWrap">
+          <img id="mhPreviewImg" src="" alt="Hizmet görseli önizleme">
+          <button type="button" class="img-preview-remove" id="mhImgRemove" aria-label="Görseli kaldır">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="upload-zone" id="mhUploadZone">
+          <input type="file" id="mhFile" accept="image/jpeg,image/png,image/webp,image/gif" aria-label="Görsel dosyası seçin">
+          <div class="upload-zone-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/></svg>
+          </div>
+          <p><strong>Dosya seçin</strong> veya buraya sürükleyin</p>
+          <p style="margin-top:3px;font-size:10.5px;">JPG, PNG, WEBP, GIF — maks 8 MB</p>
+        </div>
+        <div class="img-src-divider" aria-hidden="true">veya URL gir</div>
+        <div class="url-input-row">
+          <input type="url" class="finput" id="mhImgUrl" placeholder="https://…" aria-label="Görsel URL adresi">
+          <button type="button" class="url-load-btn" id="mhUrlLoad">Yükle</button>
+        </div>
+      </div>
+    </div>
+    <input type="hidden" id="mhId">
+    <input type="hidden" id="mhImgData">
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="mhCancel">İptal</button>
+      <button class="btn btn-primary" id="mhSave">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v14a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Kaydet
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal-bg" id="modalChangePassword" role="dialog" aria-modal="true" aria-labelledby="changePassTitle">
+  <div class="modal-box">
+    <div class="modal-title" id="changePassTitle">Şifre Değiştir</div>
+    <div class="modal-sub">Yeni şifrenizi belirleyin</div>
+    <div class="err-hint" id="changePassErr" role="alert"></div>
+    <input type="password" class="finput" id="oldPass"  placeholder="Eski şifre"       autocomplete="current-password" aria-label="Eski şifre">
+    <input type="password" class="finput" id="newPass1" placeholder="Yeni şifre"        autocomplete="new-password"     style="margin-top:8px;" aria-label="Yeni şifre">
+    <input type="password" class="finput" id="newPass2" placeholder="Yeni şifre tekrar" autocomplete="new-password"     style="margin-top:8px;" aria-label="Yeni şifre tekrar">
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="changePassCancel">İptal</button>
+      <button class="btn btn-primary" id="changePassSubmit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        Değiştir
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     UYGULAMA KODU
+     ════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  /* ── Sabitler ── */
+  const FIREBASE_CFG = {
+    apiKey:            'AIzaSyAHVWHnVbV-bl4sr5C-T87wGKdjnoMvltc',
+    authDomain:        'aryapro-84c3b.firebaseapp.com',
+    projectId:         'aryapro-84c3b',
+    storageBucket:     'aryapro-84c3b.firebasestorage.app',
+    messagingSenderId: '664020657397',
+    appId:             '1:664020657397:web:a69cf1408437cdf19c11bc',
+  };
+
+  const STORAGE_KEYS = {
+    SERVICES:     'arya_v2_services',
+    APPOINTMENTS: 'arya_v2_appointments',
+    ADMIN_HASH:   'arya_admin_hash',
+    ADMIN_SESSION:'arya_admin_auth',
+    FB_CONFIG:    'arya_firebase_config',
+  };
+
+  const TIME_SLOTS = [
+    '09:00','09:30','10:00','10:30','11:00','11:30',
+    '13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30',
+  ];
+
+  const MONTH_NAMES = [
+    'Ocak','Şubat','Mart','Nisan','Mayıs','Haziran',
+    'Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık',
+  ];
+
+  const SESSION_TTL_MS     = 30 * 60 * 1000;
+  const MAX_FILE_SIZE_BYTES = 8 * 1024 * 1024;
+  const PAGE_SIZE           = 8;
+
+  const FALLBACK_IMG = 'https://images.unsplash.com/photo-1591196703216-85c2b8ddb3b0?w=400&q=75';
+
+  /* ── SVG ikon seti ── */
+  const IC = {
+    check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>`,
+    plus:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
+    trash: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>`,
+    edit:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12" aria-hidden="true"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
+    move:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12" aria-hidden="true"><polyline points="5 9 2 12 5 15"/><polyline points="9 5 12 2 15 5"/><line x1="2" y1="12" x2="22" y2="12"/><polyline points="15 19 12 22 9 19"/><polyline points="19 9 22 12 19 15"/><line x1="12" y1="2" x2="12" y2="22"/></svg>`,
+    clock: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    wa:    `<svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.99 2C6.468 2 2 6.467 2 11.99c0 1.975.578 3.837 1.594 5.414L2.05 22l4.694-1.497C8.213 21.437 10.064 22 11.99 22c5.523 0 9.99-4.468 9.99-9.99C21.98 6.467 17.513 2 11.99 2z"/></svg>`,
+    cal:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,
+    dollar:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>`,
+    alert: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+    spin:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" style="animation:spin 1s linear infinite;display:block;margin:0 auto 6px;" aria-hidden="true"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg>`,
+  };
+
+  /* ── Yardımcı: HTML escape (XSS önleme) ── */
+  const esc = (v) => {
+    if (v === null || v === undefined) return '';
+    return String(v)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  };
+
+  /* ── Yardımcı: sayıyı para olarak biçimlendir ── */
+  const formatPrice = (v) => `${Number(v) || 0} TL`;
+
+  /* ── Yardımcı: güvenli localStorage ── */
+  const LS = {
+    get(key, fallback = null) {
+      try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+      catch { return fallback; }
+    },
+    set(key, value) {
+      try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+      catch { return false; }
+    },
+    raw(key) {
+      try { return localStorage.getItem(key) || ''; }
+      catch { return ''; }
+    },
+    rawSet(key, value) {
+      try { localStorage.setItem(key, value); return true; }
+      catch { return false; }
+    },
+  };
+
+  /* ════════════════════════════════════
+     UYGULAMA DURUMU (tek kayıt noktası)
+     ════════════════════════════════════ */
+  const State = {
+    step:         1,
+    selected:     {},   // { [serviceId]: { ad, fiyat } }
+    date:         null, // "15 Ocak"
+    time:         null, // "10:00"
+    calMonth:     (() => { const d = new Date(); d.setDate(1); return d; })(),
+    services:     [],
+    appointments: [],
+    admin: {
+      page:             1,
+      filter:           '',
+      pendingApptId:    null,
+      pendingServiceId: null,
+    },
+  };
+
+  /* ════════════════════════════════════
+     VERİ KATMANI (Firebase + localStorage)
+     ════════════════════════════════════ */
+  const Store = {
+    _db:        null,
+    _unsubSvc:  null,
+    _unsubAppt: null,
+
+    _defaultServices() {
+      return [
+        { id:1, ad:'Paça Boyu',    fiyat:30,  sure:'45 dk',  img:'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=500&q=80' },
+        { id:2, ad:'Bel Daraltma', fiyat:40,  sure:'60 dk',  img:'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=500&q=80' },
+        { id:3, ad:'Takım Elbise', fiyat:50,  sure:'2 gün',  img:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&q=80' },
+        { id:4, ad:'Perde Tem.',   fiyat:60,  sure:'3 gün',  img:'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&q=80' },
+        { id:5, ad:'Ütü',          fiyat:20,  sure:'30 dk',  img:'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500&q=80' },
+        { id:6, ad:'Yıkama',       fiyat:35,  sure:'1 gün',  img:'https://images.unsplash.com/photo-1567274996148-2b09c6512dc2?w=500&q=80' },
+      ];
+    },
+
+    _initFirebase() {
+      try {
+        if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CFG);
+        this._db = firebase.firestore();
+        return true;
+      } catch (e) {
+        console.warn('[ARYA] Firebase başlatılamadı:', e);
+        return false;
+      }
+    },
+
+    async load() {
+      const fbOk = this._initFirebase();
+      if (fbOk) {
+        try {
+          const [svcDoc, apptDoc] = await Promise.all([
+            this._db.collection('arya').doc('services').get(),
+            this._db.collection('arya').doc('appointments').get(),
+          ]);
+
+          State.services     = (svcDoc.exists  && svcDoc.data().list)  ? svcDoc.data().list  : this._defaultServices();
+          State.appointments = (apptDoc.exists && apptDoc.data().list) ? apptDoc.data().list : [];
+
+          this._unsubSvc = this._db.collection('arya').doc('services').onSnapshot(
+            snap => { if (snap.exists && snap.data().list) { State.services = snap.data().list; Booking.renderServices(); } },
+            err  => console.warn('[ARYA] Firestore izleme hatası (services):', err),
+          );
+          this._unsubAppt = this._db.collection('arya').doc('appointments').onSnapshot(
+            snap => { if (snap.exists && snap.data().list) State.appointments = snap.data().list; },
+            err  => console.warn('[ARYA] Firestore izleme hatası (appointments):', err),
+          );
+          return;
+        } catch (e) {
+          console.warn('[ARYA] Firestore okuma hatası, localStorage\'a dönülüyor:', e);
+        }
+      }
+
+      State.services     = LS.get(STORAGE_KEYS.SERVICES,     this._defaultServices());
+      State.appointments = LS.get(STORAGE_KEYS.APPOINTMENTS, []);
+    },
+
+    async save() {
+      LS.set(STORAGE_KEYS.SERVICES,     State.services);
+      LS.set(STORAGE_KEYS.APPOINTMENTS, State.appointments);
+
+      if (this._db) {
+        try {
+          await Promise.all([
+            this._db.collection('arya').doc('services').set({ list: State.services }),
+            this._db.collection('arya').doc('appointments').set({ list: State.appointments }),
+          ]);
+        } catch (e) {
+          console.warn('[ARYA] Firestore yazma hatası:', e);
+        }
+      }
+    },
+
+    isFirebaseConnected() { return !!this._db; },
+  };
+
+  /* ════════════════════════════════════
+     BİLDİRİM (Toast)
+     ════════════════════════════════════ */
+  const Toast = (() => {
+    let _tid = null;
+    const _el = () => document.getElementById('toast');
+
+    function _show(html, cls) {
+      const el = _el();
+      el.innerHTML = html;
+      el.className = `show ${cls}`;
+      clearTimeout(_tid);
+      _tid = setTimeout(() => { el.className = ''; }, 3000);
+    }
+
+    return {
+      ok:  (msg) => _show(`${IC.check} ${esc(msg)}`, 'ok'),
+      err: (msg) => _show(`${IC.alert} ${esc(msg)}`, 'err'),
+    };
+  })();
+
+  /* ════════════════════════════════════
+     MODAL YÖNETİMİ
+     ════════════════════════════════════ */
+  const Modal = {
+    open(id)  { document.getElementById(id)?.classList.add('open'); },
+    close(id) { document.getElementById(id)?.classList.remove('open'); },
+  };
+
+  /* ════════════════════════════════════
+     KİMLİK DOĞRULAMA
+     ════════════════════════════════════ */
+  const Auth = {
+    async _sha256(str) {
+      const buf  = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    },
+
+    async _getHash() {
+      if (Store._db) {
+        try {
+          const doc = await Store._db.collection('arya').doc('admin').get();
+          if (doc.exists && doc.data().passwordHash) return doc.data().passwordHash;
+        } catch (e) { console.warn('[ARYA] Hash okuma hatası:', e); }
+      }
+      return LS.raw(STORAGE_KEYS.ADMIN_HASH) || null;
+    },
+
+    async _setHash(hash) {
+      LS.rawSet(STORAGE_KEYS.ADMIN_HASH, hash);
+      if (Store._db) {
+        try { await Store._db.collection('arya').doc('admin').set({ passwordHash: hash }, { merge: true }); }
+        catch (e) { console.warn('[ARYA] Hash yazma hatası:', e); }
+      }
+    },
+
+    _writeSession() {
+      try { sessionStorage.setItem(STORAGE_KEYS.ADMIN_SESSION, JSON.stringify({ t: Date.now() })); }
+      catch { /* private/incognito */ }
+    },
+
+    async checkSession() {
+      try {
+        const d = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.ADMIN_SESSION) || 'null');
+        return !!(d && Date.now() - d.t < SESSION_TTL_MS);
+      } catch { return false; }
+    },
+
+    async login(password) {
+      const stored = await this._getHash();
+      if (!stored) return { ok: false, needSetup: true };
+      const match = (await this._sha256(password)) === stored;
+      if (match) this._writeSession();
+      return { ok: match };
+    },
+
+    async setup(password) {
+      if (!password || password.trim().length < 4) return false;
+      await this._setHash(await this._sha256(password));
+      this._writeSession();
+      return true;
+    },
+
+    async changePassword(oldPass, newPass) {
+      const stored = await this._getHash();
+      if (!stored || (await this._sha256(oldPass)) !== stored) return false;
+      await this._setHash(await this._sha256(newPass));
+      return true;
+    },
+
+    logout() {
+      try { sessionStorage.removeItem(STORAGE_KEYS.ADMIN_SESSION); }
+      catch { /* ignore */ }
+    },
+  };
+
+  /* ════════════════════════════════════
+     DOĞRULAMA
+     ════════════════════════════════════ */
+  const V = {
+    required: (v) => !!(v && v.trim()),
+    phone:    (v) => /^0?5\d{9}$/.test((v || '').replace(/\D/g, '')),
+    email:    (v) => !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
+    url:      (v) => { try { new URL(v); return true; } catch { return false; } },
+    price:    (v) => Number.isInteger(Number(v)) && Number(v) >= 0,
+  };
+
+  /* ════════════════════════════════════
+     TAKVİM YARDIMCILARI
+     ════════════════════════════════════ */
+  const Cal = {
+    label:    (d) => `${MONTH_NAMES[d.getMonth()]} ${d.getFullYear()}`,
+    dateStr:  (day, monthName) => `${day} ${monthName}`,
+    isToday:  (y, m, d) => { const n = new Date(); return n.getFullYear() === y && n.getMonth() === m && n.getDate() === d; },
+    isPast:   (y, m, d) => { const n = new Date(); n.setHours(0, 0, 0, 0); return new Date(y, m, d) < n; },
+    isSunday: (y, m, d) => new Date(y, m, d).getDay() === 0,
+  };
+
+  /* ════════════════════════════════════
+     RANDEVU / BOOKING
+     ════════════════════════════════════ */
+  const Booking = {
+    renderServices() {
+      const grid = document.getElementById('hizmetGrid');
+      if (!State.services.length) {
+        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/></svg><p>Henüz hizmet eklenmedi.</p></div>`;
+        return;
+      }
+      grid.innerHTML = State.services.map(s => {
+        const sel = !!State.selected[s.id];
+        return `
+          <div class="hizmet-card${sel ? ' sel' : ''}"
+               data-hid="${esc(s.id)}"
+               role="listitem"
+               tabindex="0"
+               aria-pressed="${sel}"
+               aria-label="${esc(s.ad)} - ${formatPrice(s.fiyat)}">
+            <div class="hc-check" aria-hidden="true">${IC.check}</div>
+            <div class="hc-img-wrap">
+              <img src="${esc(s.img)}"
+                   class="hc-img"
+                   alt="${esc(s.ad)}"
+                   loading="lazy"
+                   onerror="this.src='${FALLBACK_IMG}'">
+            </div>
+            <div class="hc-body">
+              <div class="hc-name">${esc(s.ad)}</div>
+              <div class="hc-meta">
+                <span class="hc-dur">${IC.clock} ${esc(s.sure)}</span>
+                <span class="hc-price">${formatPrice(s.fiyat)}</span>
+              </div>
+              <button class="btn-toggle${sel ? ' on' : ''}"
+                      data-hid="${esc(s.id)}"
+                      aria-label="${sel ? 'Seçimi kaldır: ' : 'Seç: '}${esc(s.ad)}">
+                ${sel ? IC.check + ' Seçildi' : IC.plus + ' Ekle'}
+              </button>
+            </div>
+          </div>`;
+      }).join('');
+      this._syncSelBar();
+    },
+
+    _syncSelBar() {
+      const bar   = document.getElementById('selBar');
+      const chips = document.getElementById('selChips');
+      const ids   = Object.keys(State.selected);
+      if (!ids.length) { bar.classList.remove('show'); return; }
+      bar.classList.add('show');
+      chips.innerHTML = ids.map(id =>
+        `<span class="chip">${esc(State.selected[id].ad)} — ${formatPrice(State.selected[id].fiyat)}</span>`
+      ).join('');
+    },
+
+    toggleService(rawId) {
+      const id  = Number(rawId);
+      const svc = State.services.find(s => s.id === id);
+      if (!svc) return;
+      if (State.selected[id]) delete State.selected[id];
+      else State.selected[id] = { ad: svc.ad, fiyat: svc.fiyat };
+      this.renderServices();
+    },
+
+    renderCalendar() {
+      const y      = State.calMonth.getFullYear();
+      const m      = State.calMonth.getMonth();
+      const mName  = MONTH_NAMES[m];
+      document.getElementById('calMonth').textContent = Cal.label(State.calMonth);
+
+      const firstDow  = new Date(y, m, 1).getDay();
+      const daysTotal = new Date(y, m + 1, 0).getDate();
+      const offset    = (firstDow + 6) % 7; // Pazartesi = 0
+
+      let html = '';
+      for (let i = 0; i < offset; i++) html += '<div class="day empty" aria-hidden="true"></div>';
+      for (let d = 1; d <= daysTotal; d++) {
+        const disabled = Cal.isPast(y, m, d) || Cal.isSunday(y, m, d);
+        const today    = Cal.isToday(y, m, d);
+        const selDate  = Cal.dateStr(d, mName);
+        const sel      = State.date === selDate;
+        const cls      = [disabled ? 'disabled' : '', today ? 'today' : '', sel ? 'sel' : ''].filter(Boolean).join(' ');
+        html += `<div class="day${cls ? ' ' + cls : ''}"
+                      data-d="${d}"
+                      data-mo="${esc(mName)}"
+                      role="gridcell"
+                      tabindex="${disabled ? -1 : 0}"
+                      aria-label="${d} ${mName}${today ? ' (bugün)' : ''}${sel ? ' (seçili)' : ''}${disabled ? ' (müsait değil)' : ''}"
+                      aria-disabled="${disabled}"
+                      aria-selected="${sel}">${d}</div>`;
+      }
+      document.getElementById('daysGrid').innerHTML = html;
+    },
+
+    renderTimes() {
+      document.getElementById('timesGrid').innerHTML = TIME_SLOTS.map(t =>
+        `<div class="t-slot${State.time === t ? ' sel' : ''}"
+              data-t="${esc(t)}"
+              role="listitem"
+              tabindex="0"
+              aria-label="${esc(t)}${State.time === t ? ' (seçili)' : ''}"
+              aria-pressed="${State.time === t}">${esc(t)}</div>`
+      ).join('');
+    },
+
+    updateSummary() {
+      const svcs  = Object.values(State.selected);
+      const total = svcs.reduce((acc, v) => acc + (Number(v.fiyat) || 0), 0);
+      document.getElementById('ozHizmet').textContent = svcs.map(s => s.ad).join(', ') || '—';
+      document.getElementById('ozTarih').textContent  = State.date || '—';
+      document.getElementById('ozSaat').textContent   = State.time || '—';
+      document.getElementById('ozToplam').textContent = formatPrice(total);
+    },
+
+    submit() {
+      const ad   = document.getElementById('musteriAd').value.trim();
+      const tel  = document.getElementById('musteriTel').value.trim();
+      const mail = document.getElementById('musteriMail').value.trim();
+
+      if (!V.required(ad))   { Toast.err('Ad Soyad alanı zorunludur.');                           return false; }
+      if (!V.phone(tel))     { Toast.err('Geçerli telefon numarası girin (05xxxxxxxxx).');         return false; }
+      if (!V.email(mail))    { Toast.err('Geçerli bir e-posta girin ya da boş bırakın.');          return false; }
+
+      const svcs  = Object.values(State.selected);
+      const total = svcs.reduce((acc, v) => acc + (Number(v.fiyat) || 0), 0);
+      const no    = 'ARY-' + Math.floor(1000 + Math.random() * 9000);
+
+      const appt = {
+        id:        Date.now(),
+        no,
+        musteriAd: ad,
+        tel:       tel.replace(/\D/g, ''),
+        mail,
+        services:  svcs,
+        total,
+        tarih:     State.date,
+        saat:      State.time,
+        paid:      false,
+        createdAt: new Date().toISOString(),
+      };
+
+      State.appointments.push(appt);
+      Store.save().catch(e => console.warn('[ARYA] Kayıt hatası:', e));
+
+      document.getElementById('randevuNo').textContent = no;
+      return true;
+    },
+  };
+
+  /* ════════════════════════════════════
+     ADIM YÖNETİMİ
+     ════════════════════════════════════ */
+  const Steps = {
+    _contentMap: { 1: 's1', 2: 's2', 3: 's3', 5: 's5' },
+    _navMap:     { 1: 'sn1', 2: 'sn2', 3: 'sn3', 5: 'sn5' },
+
+    next() {
+      if (State.step === 1 && !Object.keys(State.selected).length) { Toast.err('Lütfen en az bir hizmet seçin.'); return; }
+      if (State.step === 2 && !State.date)                         { Toast.err('Lütfen tarih seçin.');            return; }
+      if (State.step === 2 && !State.time)                         { Toast.err('Lütfen saat seçin.');             return; }
+      if (State.step === 3) { if (!Booking.submit()) return; State.step = 5; }
+      else State.step++;
+      this._render();
+    },
+
+    prev() {
+      if (State.step > 1 && State.step !== 5) { State.step--; this._render(); }
+    },
+
+    _render() {
+      document.querySelectorAll('.step-content').forEach(el => el.classList.remove('on'));
+      const cid = this._contentMap[State.step];
+      if (cid) document.getElementById(cid).classList.add('on');
+
+      document.querySelectorAll('.step-item').forEach(el => el.classList.remove('on'));
+      const nid = this._navMap[State.step];
+      if (nid) document.getElementById(nid).classList.add('on');
+
+      const footer = document.getElementById('cardFooter');
+      const geri   = document.getElementById('btnGeri');
+      footer.style.display     = State.step === 5 ? 'none' : '';
+      geri.style.display        = State.step > 1  ? ''     : 'none';
+
+      if (State.step === 2) { Booking.renderCalendar(); Booking.renderTimes(); }
+      if (State.step === 3) Booking.updateSummary();
+    },
+  };
+
+  /* ════════════════════════════════════
+     GÖRSEL YÜKLEME (Vercel Blob)
+     ════════════════════════════════════ */
+  async function uploadToVercelBlob(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await fetch('/api/upload', { method: 'POST', body: formData });
+    const data = await response.json();
+
+    if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+    return data.url;
+  }
+
+  async function handleImageFile(file) {
+    if (!file || !file.type.startsWith('image/')) { Toast.err('Lütfen bir görsel dosyası seçin.'); return; }
+    if (file.size > MAX_FILE_SIZE_BYTES)           { Toast.err('Dosya 8 MB\'dan büyük olamaz.');   return; }
+
+    const zone     = document.getElementById('mhUploadZone');
+    const origHTML = zone.innerHTML;
+    zone.innerHTML = `<div style="padding:8px;color:var(--gold);font-size:12px;text-align:center;">${IC.spin} Yükleniyor...</div>`;
+
+    try {
+      const url = await uploadToVercelBlob(file);
+      zone.innerHTML = origHTML;
+      Admin._setImgPreview(url);
+      Toast.ok('Görsel başarıyla yüklendi!');
+    } catch (err) {
+      zone.innerHTML = origHTML;
+      console.error('[ARYA] Yükleme hatası:', err);
+      Toast.err('Yükleme başarısız: ' + (err.message || 'Bilinmeyen hata'));
+    }
+  }
+
+  /* ════════════════════════════════════
+     ADMİN MODÜLÜ
+     ════════════════════════════════════ */
+  const Admin = {
+    _activePage() {
+      return document.querySelector('#adminNav .nav-item.on')?.dataset.page ?? 'dashboard';
+    },
+
+    render(page) {
+      document.querySelectorAll('#adminNav .nav-item').forEach(n => {
+        n.classList.toggle('on', n.dataset.page === page);
+        n.setAttribute('aria-current', n.dataset.page === page ? 'page' : 'false');
+      });
+      const c = document.getElementById('adminContent');
+      try {
+        const renderers = {
+          dashboard:  () => this._dashboard(),
+          randevular: () => { const h = this._randevular(); setTimeout(() => this._bindSearch('randevular'), 0); return h; },
+          hizmetler:  () => this._hizmetler(),
+          musteriler: () => this._musteriler(),
+          ayarlar:    () => this._ayarlar(),
+        };
+        c.innerHTML = renderers[page]?.() ?? '<div class="empty-state"><p>Sayfa bulunamadı.</p></div>';
+      } catch (e) {
+        c.innerHTML = '<div class="empty-state"><p>İçerik yüklenemedi.</p></div>';
+        console.error('[ARYA] Admin render hatası:', e);
+      }
+    },
+
+    /* ── Pano ── */
+    _dashboard() {
+      const A        = State.appointments;
+      const today    = new Date();
+      const todayLbl = `${today.getDate()} ${MONTH_NAMES[today.getMonth()]}`;
+      const todayCnt = A.filter(a => a.tarih === todayLbl).length;
+      const paidCnt  = A.filter(a => a.paid).length;
+      const pendCnt  = A.filter(a => !a.paid).length;
+      const revenue  = A.filter(a => a.paid).reduce((t, a) => t + (Number(a.total) || 0), 0);
+      const recent   = [...A].reverse().slice(0, 6);
+
+      return `
+        <div class="page-hdr"><div class="page-title serif">Pano</div></div>
+        <div class="stats-row">
+          ${this._statCard('Bugün',    IC.cal,    todayCnt,        'randevu')}
+          ${this._statCard('Ödendi',   IC.check,  paidCnt,         'randevu')}
+          ${this._statCard('Bekleyen', IC.clock,  pendCnt,         'randevu')}
+          ${this._statCard('Gelir',    IC.dollar,  formatPrice(revenue), '')}
+        </div>
+        <div class="sec-title serif">Son Randevular</div>
+        <div class="tbl-wrap">
+          <div class="tbl-scroll">
+            <table class="tbl">
+              <thead><tr>
+                <th>Müşteri</th><th>Hizmetler</th><th>Tarih / Saat</th><th>Ödeme</th><th>İşlem</th>
+              </tr></thead>
+              <tbody>${recent.length ? recent.map(a => this._apptRow(a)).join('') : this._emptyRow(5)}</tbody>
+            </table>
+          </div>
+        </div>`;
+    },
+
+    _statCard(lbl, icon, val, sub) {
+      return `<div class="stat">
+        <div class="stat-lbl">${icon} ${esc(lbl)}</div>
+        <div class="stat-val">${esc(String(val))}</div>
+        ${sub ? `<div class="stat-sub">${esc(sub)}</div>` : ''}
+      </div>`;
+    },
+
+    _apptRow(a) {
+      const badge = a.paid
+        ? `<button class="pay-btn paid" data-aid="${esc(a.id)}" aria-label="Ödeme durumunu değiştir">${IC.check} Ödendi</button>`
+        : `<button class="pay-btn"      data-aid="${esc(a.id)}" aria-label="Ödeme al">Ödeme Al</button>`;
+      const svcs = (a.services || []).map(s => esc(s.ad)).join(', ');
+      return `<tr>
+        <td>${esc(a.musteriAd)}<small>${esc(a.tel)}</small></td>
+        <td>${svcs}<small>${formatPrice(a.total)}</small></td>
+        <td>${esc(a.tarih)}<small>${esc(a.saat)}</small></td>
+        <td>${badge}</td>
+        <td><div class="actions">
+          <button class="icon-btn wa"    data-wa="${esc(a.tel)}"  title="WhatsApp ile iletişim">${IC.wa}</button>
+          <button class="icon-btn"       data-move="${esc(a.id)}" title="Randevu taşı">${IC.move}</button>
+        </div></td>
+      </tr>`;
+    },
+
+    _emptyRow(cols) {
+      return `<tr><td colspan="${cols}">
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <p>Kayıt bulunamadı.</p>
+        </div>
+      </td></tr>`;
+    },
+
+    /* ── Randevular ── */
+    _randevular() {
+      const filter = State.admin.filter.toLowerCase();
+      const all    = [...State.appointments].reverse().filter(a =>
+        (a.musteriAd || '').toLowerCase().includes(filter) || (a.tel || '').includes(filter)
+      );
+      const pages = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
+      const page  = Math.min(Math.max(1, State.admin.page), pages);
+      const slice = all.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+      return `
+        <div class="page-hdr">
+          <div class="page-title serif">Randevular</div>
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="finput" id="adminSearch" placeholder="Ad veya tel ara…" value="${esc(State.admin.filter)}" autocomplete="off" aria-label="Randevu ara">
+          </div>
+        </div>
+        <div class="tbl-wrap">
+          <div class="tbl-scroll">
+            <table class="tbl">
+              <thead><tr>
+                <th>Müşteri</th><th>Hizmetler</th><th>Tarih / Saat</th><th>Ödeme</th><th>İşlem</th>
+              </tr></thead>
+              <tbody>${slice.length ? slice.map(a => this._apptRow(a)).join('') : this._emptyRow(5)}</tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <button class="pg-btn" data-pg="${page - 1}" ${page === 1 ? 'disabled' : ''} aria-label="Önceki sayfa">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <span class="pg-info" aria-live="polite">${page} / ${pages}</span>
+            <button class="pg-btn" data-pg="${page + 1}" ${page >= pages ? 'disabled' : ''} aria-label="Sonraki sayfa">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>`;
+    },
+
+    _bindSearch(page) {
+      const el = document.getElementById('adminSearch');
+      if (!el) return;
+      el.addEventListener('input', e => {
+        State.admin.filter = e.target.value;
+        State.admin.page   = 1;
+        this.render(page);
+      });
+    },
+
+    /* ── Hizmetler ── */
+    _hizmetler() {
+      const cards = State.services.map(s => `
+        <div class="hizmet-card" style="cursor:default;">
+          <div class="hc-img-wrap">
+            <img src="${esc(s.img)}" class="hc-img" alt="${esc(s.ad)}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
+          </div>
+          <div class="hc-body">
+            <div class="hc-name">${esc(s.ad)}</div>
+            <div class="hc-meta">
+              <span class="hc-dur">${IC.clock} ${esc(s.sure)}</span>
+              <span class="hc-price">${formatPrice(s.fiyat)}</span>
+            </div>
+            <div style="display:flex;gap:6px;margin-top:8px;">
+              <button class="icon-btn" data-edit="${esc(s.id)}" title="Düzenle" style="flex:1;" aria-label="Düzenle: ${esc(s.ad)}">${IC.edit}</button>
+              <button class="icon-btn danger" data-del="${esc(s.id)}" title="Sil" aria-label="Sil: ${esc(s.ad)}">${IC.trash}</button>
+            </div>
+          </div>
+        </div>`).join('');
+
+      return `
+        <div class="page-hdr">
+          <div class="page-title serif">Hizmetler</div>
+          <button class="btn btn-primary" id="btnYeniHizmet">${IC.plus} Yeni Hizmet</button>
+        </div>
+        <div class="hizmet-grid" style="grid-template-columns:repeat(auto-fill,minmax(190px,1fr));">
+          ${cards || `<div class="empty-state" style="grid-column:1/-1;"><p>Henüz hizmet eklenmedi.</p></div>`}
+        </div>`;
+    },
+
+    /* ── Müşteriler ── */
+    _musteriler() {
+      const map = new Map();
+      State.appointments.forEach(a => {
+        const key = a.tel || '';
+        if (!map.has(key)) map.set(key, { name: a.musteriAd, tel: key, cnt: 0, spent: 0, last: a.tarih });
+        const m = map.get(key);
+        m.cnt++;
+        m.spent += Number(a.total) || 0;
+        m.last = a.tarih;
+      });
+      const list = [...map.values()];
+
+      return `
+        <div class="page-hdr"><div class="page-title serif">Müşteriler</div></div>
+        <div class="tbl-wrap">
+          <div class="tbl-scroll">
+            <table class="tbl">
+              <thead><tr>
+                <th>Müşteri</th><th>Telefon</th><th>Son Randevu</th><th>Randevu</th><th>Toplam</th><th></th>
+              </tr></thead>
+              <tbody>${list.length ? list.map(m => `
+                <tr>
+                  <td>${esc(m.name)}</td>
+                  <td>${esc(m.tel)}</td>
+                  <td>${esc(m.last)}</td>
+                  <td>${m.cnt}</td>
+                  <td style="color:var(--gold);font-weight:600;">${formatPrice(m.spent)}</td>
+                  <td><button class="icon-btn wa" data-wa="${esc(m.tel)}" aria-label="WhatsApp: ${esc(m.name)}">${IC.wa}</button></td>
+                </tr>`).join('') : this._emptyRow(6)}</tbody>
+            </table>
+          </div>
+        </div>`;
+    },
+
+    /* ── Ayarlar ── */
+    _ayarlar() {
+      const connected   = Store.isFirebaseConnected();
+      const fbCfgRaw    = LS.raw(STORAGE_KEYS.FB_CONFIG);
+      let   fbProjectId = '';
+      try { fbProjectId = JSON.parse(fbCfgRaw).projectId || ''; } catch { /* ignore */ }
+
+      const fbStatusHtml = connected
+        ? `<div style="display:flex;align-items:center;gap:8px;background:rgba(76,175,80,.08);border:1px solid rgba(76,175,80,.3);border-radius:10px;padding:11px 14px;margin:10px 0;font-size:13px;color:#4caf50;">
+             ✓ Firebase bağlı — <strong>${esc(fbProjectId)}</strong> &nbsp;|&nbsp; Değişiklikler anlık senkronize edilir.
+           </div>`
+        : `<div style="background:rgba(196,151,58,.07);border:1px solid rgba(196,151,58,.2);border-radius:10px;padding:12px 14px;margin:10px 0 14px;font-size:13px;color:var(--tx2);line-height:1.8;">
+             <strong style="color:var(--gold-hi);">Neden herkes göremez?</strong><br>
+             Uygulama şu an yalnızca bu tarayıcının hafızasını kullanıyor. Farklı cihazlar bu veriyi göremez.<br>
+             <strong style="color:var(--tx1);">Çözüm:</strong> Firebase bağlayın — bundan itibaren tüm değişiklikler anlık senkronize olur.
+           </div>`;
+
+      return `
+        <div class="page-hdr"><div class="page-title serif">Ayarlar</div></div>
+        <div class="settings-block" style="margin-bottom:14px;border-color:rgba(196,151,58,.4);">
+          <h3 style="display:flex;align-items:center;gap:8px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" width="17" height="17" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Firebase Bulut Veritabanı
+          </h3>
+          ${fbStatusHtml}
+          <p style="font-size:11px;color:var(--tx3);margin-bottom:8px;text-transform:uppercase;letter-spacing:1.2px;font-weight:600;">Firebase Config (JSON)</p>
+          <textarea class="finput" id="fbConfigInput" rows="6"
+            placeholder='{\n  "apiKey": "AIza...",\n  "projectId": "proje-adi"\n}'
+            style="font-family:monospace;font-size:11.5px;resize:vertical;"
+            aria-label="Firebase yapılandırma JSON">${esc(fbCfgRaw)}</textarea>
+          <button class="btn btn-primary" id="btnSaveFbConfig" style="width:100%;justify-content:center;margin-top:10px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Firebase Bağlantısını Kaydet
+          </button>
+          <div style="background:var(--bg3);border-radius:10px;padding:14px;margin-top:14px;">
+            <p style="font-size:12px;color:var(--tx2);font-weight:600;margin-bottom:8px;">Firebase nasıl kurulur? (3 adım)</p>
+            <div style="font-size:11.5px;color:var(--tx3);line-height:2;">
+              <b style="color:var(--tx2);">1.</b> <a href="https://console.firebase.google.com" target="_blank" rel="noopener noreferrer" style="color:var(--gold);">console.firebase.google.com</a> → <b>Proje oluştur</b><br>
+              <b style="color:var(--tx2);">2.</b> Sol menü → <b>Firestore Database</b> → <b>Create database</b> → <b>Test mode</b><br>
+              <b style="color:var(--tx2);">3.</b> Sol menü → <b>Proje Ayarları (⚙)</b> → <b>Web uygulaması ekle (&lt;/&gt;)</b> → Config JSON'u kopyala
+            </div>
+          </div>
+        </div>
+        <div class="settings-block">
+          <h3>Güvenlik</h3>
+          <button class="btn btn-primary" id="btnChangePassword" style="margin-top:4px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            Şifre Değiştir
+          </button>
+          <button class="btn btn-danger" id="btnLogout" style="margin-top:8px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" aria-hidden="true"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+            Oturumu Kapat
+          </button>
+        </div>`;
+    },
+
+    /* ── Ödeme durumu ── */
+    togglePayment(rawId) {
+      const appt = State.appointments.find(a => a.id === Number(rawId));
+      if (!appt) return;
+      appt.paid = !appt.paid;
+      Store.save().catch(e => console.warn('[ARYA] Kayıt hatası:', e));
+      Toast.ok(appt.paid ? 'Ödeme alındı.' : 'Ödeme geri alındı.');
+      this.render(this._activePage());
+    },
+
+    /* ── Randevu taşıma ── */
+    openReschedule(rawId) {
+      State.admin.pendingApptId = Number(rawId);
+      Modal.open('modalTasi');
+    },
+
+    confirmReschedule() {
+      const rawDate = document.getElementById('tasiTarih').value;
+      const saat    = document.getElementById('tasiSaat').value;
+      if (!rawDate) { Toast.err('Lütfen tarih seçin.'); return; }
+
+      const appt = State.appointments.find(a => a.id === State.admin.pendingApptId);
+      if (appt) {
+        const d    = new Date(rawDate);
+        appt.tarih = `${d.getDate()} ${MONTH_NAMES[d.getMonth()]}`;
+        appt.saat  = saat;
+        Store.save().catch(e => console.warn('[ARYA] Kayıt hatası:', e));
+        Toast.ok('Randevu başarıyla taşındı.');
+        Modal.close('modalTasi');
+        this.render(this._activePage());
+      }
+    },
+
+    /* ── Hizmet silme ── */
+    deleteService(rawId) {
+      if (!confirm('Bu hizmeti silmek istediğinizden emin misiniz?')) return;
+      State.services = State.services.filter(s => s.id !== Number(rawId));
+      Store.save().catch(e => console.warn('[ARYA] Kayıt hatası:', e));
+      Toast.ok('Hizmet silindi.');
+      this.render('hizmetler');
+      Booking.renderServices();
+    },
+
+    /* ── Görsel önizleme ── */
+    _setImgPreview(src) {
+      const wrap   = document.getElementById('mhPreviewWrap');
+      const imgEl  = document.getElementById('mhPreviewImg');
+      const zone   = document.getElementById('mhUploadZone');
+      const hidden = document.getElementById('mhImgData');
+      if (src) {
+        imgEl.src = src; hidden.value = src;
+        wrap.classList.add('show'); zone.style.display = 'none';
+      } else {
+        imgEl.src = ''; hidden.value = '';
+        wrap.classList.remove('show'); zone.style.display = '';
+      }
+    },
+
+    _clearImgState() {
+      document.getElementById('mhFile').value    = '';
+      document.getElementById('mhImgUrl').value  = '';
+      this._setImgPreview('');
+    },
+
+    /* ── Hizmet ekleme/düzenleme modal ── */
+    openAdd() {
+      State.admin.pendingServiceId = null;
+      document.getElementById('mhTitle').textContent = 'Yeni Hizmet';
+      ['mhAd', 'mhFiyat', 'mhSure', 'mhId'].forEach(id => { document.getElementById(id).value = ''; });
+      this._clearImgState();
+      Modal.open('modalHizmet');
+    },
+
+    openEdit(rawId) {
+      const svc = State.services.find(s => s.id === Number(rawId));
+      if (!svc) return;
+      State.admin.pendingServiceId = svc.id;
+      document.getElementById('mhTitle').textContent  = 'Hizmeti Düzenle';
+      document.getElementById('mhAd').value    = svc.ad;
+      document.getElementById('mhFiyat').value = String(svc.fiyat);
+      document.getElementById('mhSure').value  = svc.sure;
+      document.getElementById('mhId').value    = String(svc.id);
+      this._clearImgState();
+      if (svc.img) this._setImgPreview(svc.img);
+      Modal.open('modalHizmet');
+    },
+
+    saveService() {
+      const ad     = document.getElementById('mhAd').value.trim();
+      const fiyat  = parseInt(document.getElementById('mhFiyat').value, 10);
+      const sure   = document.getElementById('mhSure').value.trim();
+      const img    = document.getElementById('mhImgData').value.trim() || FALLBACK_IMG;
+
+      if (!V.required(ad) || !V.price(fiyat) || !V.required(sure)) {
+        Toast.err('Ad, fiyat ve süre alanları zorunludur.');
+        return;
+      }
+
+      if (State.admin.pendingServiceId) {
+        const svc = State.services.find(s => s.id === State.admin.pendingServiceId);
+        if (svc) Object.assign(svc, { ad, fiyat, sure, img });
+      } else {
+        const newId = Math.max(0, ...State.services.map(s => s.id)) + 1;
+        State.services.push({ id: newId, ad, fiyat, sure, img });
+      }
+
+      Store.save().catch(e => console.warn('[ARYA] Kayıt hatası:', e));
+      Modal.close('modalHizmet');
+      Toast.ok('Hizmet kaydedildi.');
+      this.render('hizmetler');
+      Booking.renderServices();
+    },
+
+    /* ── WhatsApp ── */
+    whatsapp(tel) {
+      const clean = (tel || '').replace(/\D/g, '');
+      if (!clean) return;
+      window.open(`https://wa.me/90${clean}`, '_blank', 'noopener,noreferrer');
+    },
+
+    logout() {
+      Auth.logout();
+      UI.show('musteri');
+      Toast.ok('Oturum güvenli şekilde kapatıldı.');
+    },
+  };
+
+  /* ════════════════════════════════════
+     EKRAN YÖNETİMİ
+     ════════════════════════════════════ */
+  const UI = {
+    show(tab) {
+      const isAdmin = tab === 'admin';
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+      document.getElementById(`${tab}-screen`).classList.add('on');
+      document.getElementById('swMusteri').classList.toggle('on', !isAdmin);
+      document.getElementById('swAdmin').classList.toggle('on',   isAdmin);
+    },
+  };
+
+  /* ════════════════════════════════════
+     OLAY BAĞLAYICILARI
+     ════════════════════════════════════ */
+  function bindEvents() {
+
+    /* ── Ekran geçişi ── */
+    document.getElementById('swMusteri').addEventListener('click', () => UI.show('musteri'));
+    document.getElementById('swAdmin').addEventListener('click', async () => {
+      if (await Auth.checkSession()) { UI.show('admin'); Admin.render('dashboard'); return; }
+      const hash = await Auth._getHash();
+      if (!hash) Modal.open('modalSetPassword');
+      else {
+        document.getElementById('loginPass').value = '';
+        document.getElementById('loginErr').classList.remove('show');
+        Modal.open('modalLogin');
+      }
+    });
+
+    /* ── Giriş modal ── */
+    const doLogin = async () => {
+      const result = await Auth.login(document.getElementById('loginPass').value);
+      if (result.ok)        { Modal.close('modalLogin'); UI.show('admin'); Admin.render('dashboard'); }
+      else if (result.needSetup) { Modal.close('modalLogin'); Modal.open('modalSetPassword'); }
+      else { document.getElementById('loginErr').classList.add('show'); document.getElementById('loginPass').value = ''; document.getElementById('loginPass').focus(); }
+    };
+    document.getElementById('loginSubmit').addEventListener('click', doLogin);
+    document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+    document.getElementById('loginCancel').addEventListener('click', () => Modal.close('modalLogin'));
+
+    /* ── Şifre belirleme modal ── */
+    document.getElementById('setPassSubmit').addEventListener('click', async () => {
+      const p1 = document.getElementById('setPass1').value;
+      const p2 = document.getElementById('setPass2').value;
+      document.getElementById('setPassErr').classList.remove('show');
+      if (p1 !== p2 || p1.length < 4) { document.getElementById('setPassErr').classList.add('show'); return; }
+      if (await Auth.setup(p1)) { Modal.close('modalSetPassword'); UI.show('admin'); Admin.render('dashboard'); }
+      else Toast.err('Şifre kaydedilemedi.');
+    });
+    document.getElementById('setPassCancel').addEventListener('click', () => Modal.close('modalSetPassword'));
+
+    /* ── Adım butonları ── */
+    document.getElementById('btnDevam').addEventListener('click', () => Steps.next());
+    document.getElementById('btnGeri').addEventListener('click',  () => Steps.prev());
+
+    /* ── Yeni randevu ── */
+    document.getElementById('btnYeniRandevu').addEventListener('click', () => {
+      State.selected = {}; State.date = null; State.time = null; State.step = 1;
+      ['musteriAd', 'musteriTel', 'musteriMail'].forEach(id => { document.getElementById(id).value = ''; });
+      document.getElementById('cardFooter').style.display = '';
+      Booking.renderServices();
+      Steps._render();
+    });
+
+    /* ── Hizmet seçimi (event delegation) ── */
+    document.getElementById('hizmetGrid').addEventListener('click', e => {
+      const el = e.target.closest('[data-hid]');
+      if (el) { e.stopPropagation(); Booking.toggleService(el.dataset.hid); }
+    });
+    document.getElementById('hizmetGrid').addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        const card = e.target.closest('.hizmet-card[data-hid]');
+        if (card) { e.preventDefault(); Booking.toggleService(card.dataset.hid); }
+      }
+    });
+
+    /* ── Takvim ── */
+    document.getElementById('calPrev').addEventListener('click', () => {
+      State.calMonth.setMonth(State.calMonth.getMonth() - 1);
+      Booking.renderCalendar();
+    });
+    document.getElementById('calNext').addEventListener('click', () => {
+      State.calMonth.setMonth(State.calMonth.getMonth() + 1);
+      Booking.renderCalendar();
+    });
+    document.getElementById('daysGrid').addEventListener('click', e => {
+      const d = e.target.closest('.day:not(.disabled):not(.empty)');
+      if (d) { State.date = Cal.dateStr(d.dataset.d, d.dataset.mo); Booking.renderCalendar(); }
+    });
+    document.getElementById('daysGrid').addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        const d = e.target.closest('.day:not(.disabled):not(.empty)');
+        if (d) { e.preventDefault(); State.date = Cal.dateStr(d.dataset.d, d.dataset.mo); Booking.renderCalendar(); }
+      }
+    });
+    document.getElementById('timesGrid').addEventListener('click', e => {
+      const s = e.target.closest('.t-slot');
+      if (s) { State.time = s.dataset.t; Booking.renderTimes(); }
+    });
+
+    /* ── Admin navigasyon ── */
+    document.getElementById('adminNav').addEventListener('click', async e => {
+      const item = e.target.closest('.nav-item[data-page]');
+      if (!item) return;
+      if (!await Auth.checkSession()) { Modal.open('modalLogin'); return; }
+      Admin.render(item.dataset.page);
+    });
+    document.getElementById('adminNav').addEventListener('keydown', async e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        const item = e.target.closest('.nav-item[data-page]');
+        if (!item) return;
+        e.preventDefault();
+        if (!await Auth.checkSession()) { Modal.open('modalLogin'); return; }
+        Admin.render(item.dataset.page);
+      }
+    });
+
+    /* ── Admin içerik eylemleri (event delegation) ── */
+    document.getElementById('adminContent').addEventListener('click', async e => {
+      const pay  = e.target.closest('[data-aid]');   if (pay)  { Admin.togglePayment(pay.dataset.aid);      return; }
+      const wa   = e.target.closest('[data-wa]');    if (wa)   { Admin.whatsapp(wa.dataset.wa);             return; }
+      const move = e.target.closest('[data-move]');  if (move) { Admin.openReschedule(move.dataset.move);   return; }
+      const edit = e.target.closest('[data-edit]');  if (edit) { Admin.openEdit(edit.dataset.edit);         return; }
+      const del  = e.target.closest('[data-del]');   if (del)  { Admin.deleteService(del.dataset.del);      return; }
+      const pg   = e.target.closest('[data-pg]:not([disabled])'); if (pg) { State.admin.page = Number(pg.dataset.pg); Admin.render('randevular'); return; }
+
+      if (e.target.closest('#btnYeniHizmet'))    { Admin.openAdd(); return; }
+      if (e.target.closest('#btnChangePassword')) {
+        ['oldPass','newPass1','newPass2'].forEach(id => { document.getElementById(id).value = ''; });
+        const errEl = document.getElementById('changePassErr'); errEl.textContent = ''; errEl.classList.remove('show');
+        Modal.open('modalChangePassword'); return;
+      }
+      if (e.target.closest('#btnSaveFbConfig')) {
+        const raw = document.getElementById('fbConfigInput').value.trim();
+        try { JSON.parse(raw); LS.rawSet(STORAGE_KEYS.FB_CONFIG, raw); Toast.ok('Config kaydedildi. Sayfayı yenileyin.'); }
+        catch { Toast.err('Geçersiz JSON formatı.'); }
+        return;
+      }
+      if (e.target.closest('#btnLogout')) { Admin.logout(); return; }
+    });
+
+    /* ── Şifre değiştirme modal ── */
+    document.getElementById('changePassSubmit').addEventListener('click', async () => {
+      const old = document.getElementById('oldPass').value;
+      const n1  = document.getElementById('newPass1').value;
+      const n2  = document.getElementById('newPass2').value;
+      const errEl = document.getElementById('changePassErr');
+      if (n1 !== n2 || n1.length < 4) { errEl.textContent = 'Şifreler uyuşmuyor veya çok kısa (min. 4 karakter).'; errEl.classList.add('show'); return; }
+      if (await Auth.changePassword(old, n1)) { Modal.close('modalChangePassword'); Toast.ok('Şifre başarıyla değiştirildi.'); }
+      else { errEl.textContent = 'Eski şifre hatalı.'; errEl.classList.add('show'); }
+    });
+    document.getElementById('changePassCancel').addEventListener('click', () => Modal.close('modalChangePassword'));
+
+    /* ── Randevu taşıma ── */
+    document.getElementById('tasiConfirm').addEventListener('click', () => Admin.confirmReschedule());
+    document.getElementById('tasiCancel').addEventListener('click',  () => Modal.close('modalTasi'));
+
+    /* ── Hizmet kaydet/iptal ── */
+    document.getElementById('mhSave').addEventListener('click',   () => Admin.saveService());
+    document.getElementById('mhCancel').addEventListener('click', () => Modal.close('modalHizmet'));
+
+    /* ── Dosya yükleme ── */
+    document.getElementById('mhFile').addEventListener('change', e => handleImageFile(e.target.files[0]));
+    const zone = document.getElementById('mhUploadZone');
+    zone.addEventListener('dragover',  e => { e.preventDefault(); zone.classList.add('drag'); });
+    zone.addEventListener('dragleave', ()  => zone.classList.remove('drag'));
+    zone.addEventListener('drop',      e  => { e.preventDefault(); zone.classList.remove('drag'); handleImageFile(e.dataTransfer.files[0]); });
+
+    /* ── URL'den görsel yükle ── */
+    document.getElementById('mhUrlLoad').addEventListener('click', () => {
+      const url = document.getElementById('mhImgUrl').value.trim();
+      if (!url || !V.url(url)) { Toast.err('Lütfen geçerli bir URL girin.'); return; }
+      const tester     = new Image();
+      tester.onload  = () => Admin._setImgPreview(url);
+      tester.onerror = () => Toast.err('URL\'den görsel yüklenemedi. URL\'yi kontrol edin.');
+      tester.src = url;
+    });
+    document.getElementById('mhImgRemove').addEventListener('click', () => Admin._clearImgState());
+
+    /* ── Modal dışı tıklama ile kapat ── */
+    document.querySelectorAll('.modal-bg').forEach(overlay => {
+      overlay.addEventListener('click', e => {
+        if (e.target !== overlay) return;
+        if (overlay.id === 'modalLogin' || overlay.id === 'modalSetPassword') return;
+        Modal.close(overlay.id);
+      });
+    });
+
+    /* ── ESC ile modal kapat ── */
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Escape') return;
+      document.querySelectorAll('.modal-bg.open').forEach(m => {
+        if (m.id !== 'modalLogin' && m.id !== 'modalSetPassword') Modal.close(m.id);
+      });
+    });
+  }
+
+  /* ════════════════════════════════════
+     BAŞLATMA
+     ════════════════════════════════════ */
+  async function boot() {
+    try {
+      await Store.load();
+      Booking.renderServices();
+      Steps._render();
+      bindEvents();
+      console.info('%c ARYA Atelier v2.1', 'background:#c4973a;color:#07080f;font-weight:700;padding:4px 14px;border-radius:20px;font-size:13px;');
+    } catch (e) {
+      console.error('[ARYA] Başlatma hatası:', e);
+    }
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+
+})();
+</script>
+</body>
+</html>
