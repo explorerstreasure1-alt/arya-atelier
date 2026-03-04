@@ -731,7 +731,8 @@
         <div class="sec-label" id="step3-title">İletişim Bilgileri</div>
         <div class="field-stack">
           <input type="text"  class="finput" id="musteriAd"   placeholder="Ad Soyad *"               autocomplete="name"  aria-label="Ad Soyad" aria-required="true">
-          <input type="tel"   class="finput" id="musteriTel"  placeholder="Telefon (05xxxxxxxxx) *"  autocomplete="tel"   aria-label="Telefon numarası" aria-required="true">
+          <!-- Değişiklik: telefon alanı sadece son 4 hane için düzenlendi -->
+          <input type="tel"   class="finput" id="musteriTel"  placeholder="Telefon (son 4 hane) *"  maxlength="4" autocomplete="off" aria-label="Telefon numarası (son 4 hane)" aria-required="true">
           <input type="email" class="finput" id="musteriMail" placeholder="E-posta (isteğe bağlı)"   autocomplete="email" aria-label="E-posta adresi">
         </div>
         <div class="summary-card" aria-label="Randevu özeti">
@@ -1072,6 +1073,24 @@
     },
   };
 
+  /* ========== Maskeleme fonksiyonları ========== */
+  function maskFullName(name) {
+    if (!name) return '';
+    const parts = name.trim().split(' ');
+    const firstName = parts[0] || '';
+    if (parts.length === 1) return firstName; // sadece ad varsa
+    const lastNameFirstChar = parts[parts.length - 1].charAt(0).toUpperCase();
+    return `${firstName} ${lastNameFirstChar}.XXX`;
+  }
+
+  function maskPhone(phone) {
+    if (!phone) return '';
+    const clean = phone.replace(/\D/g, '');
+    if (clean.length <= 4) return clean;
+    return `*** *** ${clean.slice(-4)}`;
+  }
+  /* ============================================ */
+
   /* ════════════════════════════════════
      UYGULAMA DURUMU (tek kayıt noktası)
      ════════════════════════════════════ */
@@ -1402,30 +1421,43 @@
       document.getElementById('ozToplam').textContent = formatPrice(total);
     },
 
+    // ***** DEĞİŞİKLİK: submit fonksiyonu (ad maskelenir, telefon son 4 hane kaydedilir) *****
     submit() {
-      const ad   = document.getElementById('musteriAd').value.trim();
-      const tel  = document.getElementById('musteriTel').value.trim();
+      const adRaw = document.getElementById('musteriAd').value.trim();
+      const telRaw = document.getElementById('musteriTel').value.trim();
       const mail = document.getElementById('musteriMail').value.trim();
 
-      if (!V.required(ad))   { Toast.err('Ad Soyad alanı zorunludur.');                           return false; }
-      if (!V.phone(tel))     { Toast.err('Geçerli telefon numarası girin (05xxxxxxxxx).');         return false; }
-      if (!V.email(mail))    { Toast.err('Geçerli bir e-posta girin ya da boş bırakın.');          return false; }
+      if (!V.required(adRaw)) { Toast.err('Ad Soyad alanı zorunludur.'); return false; }
+      if (!telRaw || telRaw.length !== 4 || !/^\d{4}$/.test(telRaw)) {
+        Toast.err('Lütfen telefon numaranızın son 4 hanesini girin (4 rakam).');
+        return false;
+      }
+      if (!V.email(mail)) { Toast.err('Geçerli bir e-posta girin ya da boş bırakın.'); return false; }
 
-      const svcs  = Object.values(State.selected);
+      // Adı maskeli hale getir: ilk ad + soyadın ilk harfi + .XXX
+      const nameParts = adRaw.split(' ');
+      const firstName = nameParts[0] || '';
+      let maskedName = firstName;
+      if (nameParts.length > 1) {
+        const lastNameFirstChar = nameParts[nameParts.length - 1].charAt(0).toUpperCase();
+        maskedName = `${firstName} ${lastNameFirstChar}.XXX`;
+      } // tek kelimeyse sadece ad kalır
+
+      const svcs = Object.values(State.selected);
       const total = svcs.reduce((acc, v) => acc + (Number(v.fiyat) || 0), 0);
-      const no    = 'ARY-' + Math.floor(1000 + Math.random() * 9000);
+      const no = 'ARY-' + Math.floor(1000 + Math.random() * 9000);
 
       const appt = {
-        id:        Date.now(),
+        id: Date.now(),
         no,
-        musteriAd: ad,
-        tel:       tel.replace(/\D/g, ''),
+        musteriAd: maskedName,   // maskelenmiş ad
+        tel: telRaw,             // sadece son 4 hane
         mail,
-        services:  svcs,
+        services: svcs,
         total,
-        tarih:     State.date,
-        saat:      State.time,
-        paid:      false,
+        tarih: State.date,
+        saat: State.time,
+        paid: false,
         createdAt: new Date().toISOString(),
       };
 
@@ -1579,19 +1611,21 @@
       </div>`;
     },
 
+    // ***** DEĞİŞİKLİK: randevu satırı (ad ve telefon maskelenir, WhatsApp butonu kaldırıldı) *****
     _apptRow(a) {
       const badge = a.paid
         ? `<button class="pay-btn paid" data-aid="${esc(a.id)}" aria-label="Ödeme durumunu değiştir">${IC.check} Ödendi</button>`
         : `<button class="pay-btn"      data-aid="${esc(a.id)}" aria-label="Ödeme al">Ödeme Al</button>`;
       const svcs = (a.services || []).map(s => esc(s.ad)).join(', ');
+      const maskedName = maskFullName(a.musteriAd);
+      const maskedTel  = maskPhone(a.tel);
       return `<tr>
-        <td>${esc(a.musteriAd)}<small>${esc(a.tel)}</small></td>
+        <td>${esc(maskedName)}<small>${esc(maskedTel)}</small></td>
         <td>${svcs}<small>${formatPrice(a.total)}</small></td>
         <td>${esc(a.tarih)}<small>${esc(a.saat)}</small></td>
         <td>${badge}</td>
         <td><div class="actions">
-          <button class="icon-btn wa"    data-wa="${esc(a.tel)}"  title="WhatsApp ile iletişim">${IC.wa}</button>
-          <button class="icon-btn"       data-move="${esc(a.id)}" title="Randevu taşı">${IC.move}</button>
+          <button class="icon-btn" data-move="${esc(a.id)}" title="Randevu taşı">${IC.move}</button>
         </div></td>
       </tr>`;
     },
@@ -1684,7 +1718,7 @@
         </div>`;
     },
 
-    /* ── Müşteriler ── */
+    /* ── Müşteriler (WhatsApp butonu kaldırıldı, ad ve telefon maskelenir) ── */
     _musteriler() {
       const map = new Map();
       State.appointments.forEach(a => {
@@ -1705,15 +1739,18 @@
               <thead><tr>
                 <th>Müşteri</th><th>Telefon</th><th>Son Randevu</th><th>Randevu</th><th>Toplam</th><th></th>
               </tr></thead>
-              <tbody>${list.length ? list.map(m => `
-                <tr>
-                  <td>${esc(m.name)}</td>
-                  <td>${esc(m.tel)}</td>
+              <tbody>${list.length ? list.map(m => {
+                const maskedName = maskFullName(m.name);
+                const maskedTel  = maskPhone(m.tel);
+                return `<tr>
+                  <td>${esc(maskedName)}</td>
+                  <td>${esc(maskedTel)}</td>
                   <td>${esc(m.last)}</td>
                   <td>${m.cnt}</td>
                   <td style="color:var(--gold);font-weight:600;">${formatPrice(m.spent)}</td>
-                  <td><button class="icon-btn wa" data-wa="${esc(m.tel)}" aria-label="WhatsApp: ${esc(m.name)}">${IC.wa}</button></td>
-                </tr>`).join('') : this._emptyRow(6)}</tbody>
+                  <td></td>
+                </tr>`;
+              }).join('') : this._emptyRow(6)}</tbody>
             </table>
           </div>
         </div>`;
@@ -1732,7 +1769,7 @@
            </div>`
         : `<div style="background:rgba(196,151,58,.07);border:1px solid rgba(196,151,58,.2);border-radius:10px;padding:12px 14px;margin:10px 0 14px;font-size:13px;color:var(--tx2);line-height:1.8;">
              <strong style="color:var(--gold-hi);">Neden herkes göremez?</strong><br>
-             Uygulama şu an yalnızca bu tarayıcının hafızasını kullanıyor. Farklı cihazlar bu veriyi göremez.<br>
+             Uygulama şu an yalnızca bu tarayıcının hafızasını kullanıyor. Farklı cihazlar bu veriyı göremez.<br>
              <strong style="color:var(--tx1);">Çözüm:</strong> Firebase bağlayın — bundan itibaren tüm değişiklikler anlık senkronize olur.
            </div>`;
 
@@ -1888,12 +1925,8 @@
       Booking.renderServices();
     },
 
-    /* ── WhatsApp ── */
-    whatsapp(tel) {
-      const clean = (tel || '').replace(/\D/g, '');
-      if (!clean) return;
-      window.open(`https://wa.me/90${clean}`, '_blank', 'noopener,noreferrer');
-    },
+    /* ── WhatsApp butonu kaldırıldığı için bu metod artık kullanılmıyor, ama kalabilir ── */
+    // whatsapp(tel) { ... } // silindi
 
     logout() {
       Auth.logout();
@@ -1919,6 +1952,13 @@
      OLAY BAĞLAYICILARI
      ════════════════════════════════════ */
   function bindEvents() {
+    // Telefon inputuna sadece rakam girişi ve maxlength 4
+    const telInput = document.getElementById('musteriTel');
+    if (telInput) {
+      telInput.addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+      });
+    }
 
     /* ── Ekran geçişi ── */
     document.getElementById('swMusteri').addEventListener('click', () => UI.show('musteri'));
@@ -2024,7 +2064,6 @@
     /* ── Admin içerik eylemleri (event delegation) ── */
     document.getElementById('adminContent').addEventListener('click', async e => {
       const pay  = e.target.closest('[data-aid]');   if (pay)  { Admin.togglePayment(pay.dataset.aid);      return; }
-      const wa   = e.target.closest('[data-wa]');    if (wa)   { Admin.whatsapp(wa.dataset.wa);             return; }
       const move = e.target.closest('[data-move]');  if (move) { Admin.openReschedule(move.dataset.move);   return; }
       const edit = e.target.closest('[data-edit]');  if (edit) { Admin.openEdit(edit.dataset.edit);         return; }
       const del  = e.target.closest('[data-del]');   if (del)  { Admin.deleteService(del.dataset.del);      return; }
@@ -2110,7 +2149,7 @@
       Booking.renderServices();
       Steps._render();
       bindEvents();
-      console.info('%c ARYA Atelier v2.1', 'background:#c4973a;color:#07080f;font-weight:700;padding:4px 14px;border-radius:20px;font-size:13px;');
+      console.info('%c ARYA Atelier v2.1 (Gizlilik Güncellemesi)', 'background:#c4973a;color:#07080f;font-weight:700;padding:4px 14px;border-radius:20px;font-size:13px;');
     } catch (e) {
       console.error('[ARYA] Başlatma hatası:', e);
     }
