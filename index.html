@@ -64,7 +64,7 @@
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 4px; }
 
-    /* ── Switcher ── */
+    /* Switcher */
     .switcher {
       position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
       z-index: 9999; background: rgba(14,15,24,.92);
@@ -86,7 +86,7 @@
       color: var(--bg0); font-weight: 600; box-shadow: 0 4px 18px rgba(196,151,58,.42);
     }
 
-    /* ── Toast ── */
+    /* Toast */
     #toast {
       position: fixed; bottom: 22px; right: 22px; z-index: 99999;
       background: var(--bg2); border-radius: var(--r-pill); padding: 11px 18px;
@@ -99,11 +99,11 @@
     #toast.err { border: 1px solid rgba(224,80,80,.5); color: #e05050; }
     #toast svg { width: 15px; height: 15px; flex-shrink: 0; }
 
-    /* ── Screens ── */
+    /* Screens */
     .screen { display: none; flex-direction: column; min-height: 100vh; }
     .screen.on { display: flex; }
 
-    /* ── Hero ── */
+    /* Hero */
     .hero {
       position: relative; height: 420px; overflow: hidden; flex-shrink: 0;
     }
@@ -187,7 +187,7 @@
       display: inline-block; box-shadow: 0 0 6px var(--gold);
     }
 
-    /* ── Booking card ── */
+    /* Booking card */
     .booking-wrap {
       max-width: 900px; margin: 0 auto; padding: 0 14px 60px; width: 100%;
       margin-top: -32px; position: relative; z-index: 3;
@@ -255,7 +255,7 @@
     }
     .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--bdr-s); }
 
-    /* ── Service grid ── */
+    /* Service grid */
     .hizmet-grid {
       display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
     }
@@ -312,7 +312,7 @@
     .chips { display: flex; flex-wrap: wrap; gap: 6px; }
     .chip { background: var(--gold-t15); border: 1px solid var(--gold-t30); border-radius: var(--r-pill); padding: 3px 10px; font-size: 11px; color: var(--gold); font-weight: 500; }
 
-    /* ── Calendar ── */
+    /* Calendar */
     .takvim-grid { display: grid; grid-template-columns: 1fr; gap: 22px; }
     @media (min-width: 520px) { .takvim-grid { grid-template-columns: 1fr 1fr; } }
     .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
@@ -354,7 +354,7 @@
     .t-slot:hover { background: var(--bg3); border-color: var(--bdr-m); color: var(--tx1); }
     .t-slot.sel { background: var(--gold-t15); border-color: var(--gold); color: var(--gold); font-weight: 600; }
 
-    /* ── Forms ── */
+    /* Forms */
     .finput {
       width: 100%; padding: 13px 15px; background: var(--bg2); border: 1px solid var(--bdr-s);
       border-radius: var(--r-md); color: var(--tx1); font-family: 'DM Sans', sans-serif;
@@ -365,6 +365,13 @@
     .finput::placeholder { color: var(--tx3); }
     select.finput { cursor: pointer; }
     .field-stack { display: flex; flex-direction: column; gap: 10px; }
+    .input-note {
+      display: block;
+      margin-top: 4px;
+      color: var(--tx3);
+      font-size: 10px;
+      line-height: 1.4;
+    }
     .summary-card { background: var(--bg2); border: 1px solid var(--bdr-s); border-radius: var(--r-lg); padding: 16px; margin-top: 16px; }
     .sum-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; font-size: 13px; }
     .sum-row:not(:last-child) { border-bottom: 1px solid var(--bdr-s); }
@@ -375,7 +382,7 @@
     .sum-note { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--bdr); font-size: 11px; color: var(--tx3); display: flex; align-items: center; gap: 6px; }
     .sum-note svg { width: 11px; height: 11px; color: var(--gold); }
 
-    /* ── Success ── */
+    /* Success */
     .success-wrap { text-align: center; padding: 36px 16px; }
     .success-ring {
       width: 74px; height: 74px; margin: 0 auto 20px; border: 1px solid var(--bdr);
@@ -391,13 +398,13 @@
     .success-no-lbl { font-size: 9.5px; text-transform: uppercase; letter-spacing: 2px; color: var(--tx3); margin-bottom: 6px; }
     .success-no { font-family: 'Playfair Display', serif; font-size: 30px; color: var(--gold); letter-spacing: 2px; }
 
-    /* ── Card footer ── */
+    /* Card footer */
     .card-footer {
       padding: 14px 22px; border-top: 1px solid var(--bdr-s);
       display: flex; align-items: center; justify-content: flex-end; gap: 10px;
     }
 
-    /* ── Buttons ── */
+    /* Buttons */
     .btn {
       display: inline-flex; align-items: center; gap: 7px; padding: 10px 22px;
       border-radius: var(--r-pill); border: none; font-family: 'DM Sans', sans-serif;
@@ -416,7 +423,7 @@
     .btn-danger { background: transparent; border: 1px solid rgba(224,80,80,.25); color: #e05050; }
     .btn-danger:hover { background: rgba(224,80,80,.08); }
 
-    /* ── Admin layout ── */
+    /* Admin layout */
     .admin-shell { display: flex; flex-direction: column; min-height: 100vh; }
     .admin-topbar {
       display: flex; overflow-x: auto; gap: 3px; background: rgba(10,11,20,.95);
@@ -520,7 +527,7 @@
     .settings-block p { font-size: 13px; color: var(--tx2); margin-bottom: 6px; }
     .settings-block strong { color: var(--tx1); font-weight: 600; }
 
-    /* ── Modals ── */
+    /* Modals */
     .modal-bg {
       position: fixed; inset: 0; background: rgba(7,8,15,.87);
       backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3);
@@ -555,7 +562,7 @@
     #modalSetPassword .modal-box { text-align: center; }
     #modalSetPassword .modal-actions { justify-content: center; }
 
-    /* ── Upload zone ── */
+    /* Upload zone */
     .upload-zone {
       border: 1px dashed var(--bdr); border-radius: var(--r-md); padding: 18px 12px;
       text-align: center; cursor: pointer; transition: border-color var(--t1) var(--ease), background var(--t1) var(--ease);
@@ -601,32 +608,73 @@
       from { transform: rotate(0deg); }
       to   { transform: rotate(360deg); }
     }
-  </style>
 
+    /* Müzik butonu */
+    .music-btn {
+      position: fixed;
+      bottom: 90px;
+      right: 22px;
+      z-index: 9999;
+      background: var(--bg2);
+      border: 1px solid var(--bdr);
+      border-radius: var(--r-pill);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--tx1);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: var(--sh-md);
+      backdrop-filter: blur(10px);
+      transition: all var(--t2) var(--ease);
+    }
+    .music-btn:hover {
+      background: var(--bg3);
+      border-color: var(--gold);
+    }
+    .music-btn svg {
+      width: 16px;
+      height: 16px;
+      color: var(--gold);
+    }
+    .music-btn.playing svg {
+      animation: spin 3s linear infinite;
+    }
+  </style>
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
-<!-- ── Switcher ── -->
+<!-- Müzik Kontrol Butonu -->
+<div class="music-btn" id="musicToggle" aria-label="Müziği aç/kapat">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+    <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z" />
+    <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+  </svg>
+  <span id="musicText">Müziği Başlat</span>
+</div>
+
+<!-- Switcher -->
 <div class="switcher">
   <button class="sw-btn on" id="swMusteri" aria-label="Müşteri görünümüne geç">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
     Müşteri
   </button>
   <button class="sw-btn" id="swAdmin" aria-label="Yönetim paneline geç">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M2 12h2M20 12h2"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M2 12h2M20 12h2"/></svg>
     Yönetim
   </button>
 </div>
 
-<!-- ── Toast ── -->
+<!-- Toast -->
 <div id="toast" role="status" aria-live="polite"></div>
 
-<!-- ════════════════════════════════════════
-     MÜŞTERİ EKRANI
-     ════════════════════════════════════════ -->
+<!-- MÜŞTERİ EKRANI -->
 <div class="screen on" id="musteri-screen">
 
   <div class="hero" role="banner">
@@ -672,7 +720,7 @@
           <div class="step-sep" aria-hidden="true"></div>
           <div class="step-item" id="sn5">
             <div class="step-num">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
             <div class="step-lbl">Tamam</div>
           </div>
@@ -680,7 +728,7 @@
       </div>
 
       <div class="pay-note" role="note">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         <span><strong>Ödeme bilgisi:</strong> Tüm ödemeler hizmet tesliminde nakit veya kart ile alınır. Ön ödeme talep edilmez.</span>
       </div>
 
@@ -701,11 +749,11 @@
           <div>
             <div class="cal-nav">
               <button class="cal-arr" id="calPrev" aria-label="Önceki ay">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
               </button>
               <span class="cal-month serif" id="calMonth" aria-live="polite">Ocak 2025</span>
               <button class="cal-arr" id="calNext" aria-label="Sonraki ay">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
               </button>
             </div>
             <div class="day-names" aria-hidden="true">
@@ -726,35 +774,34 @@
         </div>
       </section>
 
-      <!-- Adım 3: Bilgi ve Özet -->
+      <!-- Adım 3: Bilgi ve Özet (güncellendi) -->
       <section class="step-content" id="s3" aria-labelledby="step3-title">
         <div class="sec-label" id="step3-title">İletişim Bilgileri</div>
         <div class="field-stack">
-          <input type="text"  class="finput" id="musteriAd"   placeholder="Ad Soyad *"               autocomplete="name"  aria-label="Ad Soyad" aria-required="true">
-          <!-- Değişiklik: telefon alanı sadece son 4 hane için düzenlendi -->
-          <input type="tel"   class="finput" id="musteriTel"  placeholder="Telefon (son 4 hane) *"  maxlength="4" autocomplete="off" aria-label="Telefon numarası (son 4 hane)" aria-required="true">
-          <input type="email" class="finput" id="musteriMail" placeholder="E-posta (isteğe bağlı)"   autocomplete="email" aria-label="E-posta adresi">
+          <div>
+            <input type="text" class="finput" id="musteriAd" placeholder="Ad Soyad *" autocomplete="name" aria-label="Ad Soyad" aria-required="true">
+            <small style="display:block; margin-top:4px; color:var(--tx3); font-size:10px; line-height:1.4;">🔒 Güvenlik gereği adınız ve soyadınızın baş harfleri kaydedilir, geri kalanı silinir.</small>
+          </div>
+          <div>
+            <input type="tel" class="finput" id="musteriTel" placeholder="Telefon (son 4 hane) *" maxlength="4" autocomplete="off" aria-label="Telefon numarası (son 4 hane)" aria-required="true">
+            <small style="display:block; margin-top:4px; color:var(--tx3); font-size:10px; line-height:1.4;">🔒 Telefon numaranızın sadece son 4 hanesi kaydedilir.</small>
+          </div>
+          <div>
+            <input type="email" class="finput" id="musteriMail" placeholder="E-posta (isteğe bağlı)" autocomplete="email" aria-label="E-posta adresi">
+            <small style="display:block; margin-top:4px; color:var(--tx3); font-size:10px; line-height:1.4;">📧 E-posta adresiniz yalnızca randevu bilgilendirmesi için kullanılır.</small>
+          </div>
         </div>
         <div class="summary-card" aria-label="Randevu özeti">
           <div class="sum-row">
-            <span class="sum-lbl">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
-              Hizmetler
-            </span>
+            <span class="sum-lbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg> Hizmetler</span>
             <span class="sum-val" id="ozHizmet">—</span>
           </div>
           <div class="sum-row">
-            <span class="sum-lbl">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              Tarih
-            </span>
+            <span class="sum-lbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Tarih</span>
             <span class="sum-val" id="ozTarih">—</span>
           </div>
           <div class="sum-row">
-            <span class="sum-lbl">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              Saat
-            </span>
+            <span class="sum-lbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Saat</span>
             <span class="sum-val" id="ozSaat">—</span>
           </div>
           <div class="sum-row total">
@@ -762,7 +809,7 @@
             <span class="sum-val" id="ozToplam">0 TL</span>
           </div>
           <div class="sum-note">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
             Ödeme hizmet tesliminde yapılır. Şu an tahsilat alınmaz.
           </div>
         </div>
@@ -781,7 +828,7 @@
             <div class="success-no" id="randevuNo" aria-live="polite">ARY-0000</div>
           </div>
           <button class="btn btn-primary" id="btnYeniRandevu">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
             Yeni Randevu Al
           </button>
         </div>
@@ -790,42 +837,40 @@
       <!-- Footer -->
       <div class="card-footer" id="cardFooter">
         <button class="btn btn-ghost" id="btnGeri" style="display:none;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
           Geri
         </button>
         <button class="btn btn-primary" id="btnDevam">
           Devam
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
       </div>
     </div>
   </main>
 </div>
 
-<!-- ════════════════════════════════════════
-     ADMIN EKRANI
-     ════════════════════════════════════════ -->
+<!-- ADMIN EKRANI -->
 <div class="screen" id="admin-screen">
   <div class="admin-shell">
     <nav class="admin-topbar" id="adminNav" aria-label="Admin navigasyonu">
       <div class="nav-item on" data-page="dashboard" role="button" tabindex="0" aria-current="page">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         Pano
       </div>
       <div class="nav-item" data-page="randevular" role="button" tabindex="0">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         Randevular
       </div>
       <div class="nav-item" data-page="hizmetler" role="button" tabindex="0">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
         Hizmetler
       </div>
       <div class="nav-item" data-page="musteriler" role="button" tabindex="0">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
         Müşteriler
       </div>
       <div class="nav-item" data-page="ayarlar" role="button" tabindex="0">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M2 12h2M20 12h2"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M2 12h2M20 12h2"/></svg>
         Ayarlar
       </div>
     </nav>
@@ -833,10 +878,7 @@
   </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     MODALLER
-     ════════════════════════════════════════ -->
-
+<!-- MODALLER -->
 <!-- Login Modal -->
 <div class="modal-bg" id="modalLogin" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
   <div class="modal-box">
@@ -846,14 +888,14 @@
     <div class="modal-title" id="loginTitle">Admin Girişi</div>
     <div class="modal-sub">Yönetim paneline erişmek için şifrenizi girin</div>
     <div class="err-hint" id="loginErr" role="alert">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       Hatalı şifre, lütfen tekrar deneyin.
     </div>
     <input type="password" class="finput" id="loginPass" placeholder="Şifre" autocomplete="current-password" aria-label="Admin şifresi">
     <div class="modal-actions">
       <button class="btn btn-ghost" id="loginCancel">İptal</button>
       <button class="btn btn-primary" id="loginSubmit">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
         Giriş Yap
       </button>
     </div>
@@ -869,7 +911,7 @@
     <div class="modal-title" id="setPassTitle">Admin Şifresi Belirleyin</div>
     <div class="modal-sub">İlk giriş için yeni bir şifre oluşturun</div>
     <div class="err-hint" id="setPassErr" role="alert">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       Şifreler uyuşmuyor veya geçersiz.
     </div>
     <input type="password" class="finput" id="setPass1" placeholder="Yeni şifre (min. 4 karakter)" autocomplete="new-password" aria-label="Yeni şifre">
@@ -877,7 +919,7 @@
     <div class="modal-actions">
       <button class="btn btn-ghost" id="setPassCancel">İptal</button>
       <button class="btn btn-primary" id="setPassSubmit">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
         Kaydet ve Giriş Yap
       </button>
     </div>
@@ -902,7 +944,7 @@
     <div class="modal-actions">
       <button class="btn btn-ghost" id="tasiCancel">İptal</button>
       <button class="btn btn-primary" id="tasiConfirm">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v14a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v14a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
         Taşı
       </button>
     </div>
@@ -934,7 +976,7 @@
         <div class="img-preview-wrap" id="mhPreviewWrap">
           <img id="mhPreviewImg" src="" alt="Hizmet görseli önizleme">
           <button type="button" class="img-preview-remove" id="mhImgRemove" aria-label="Görseli kaldır">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
         <div class="upload-zone" id="mhUploadZone">
@@ -957,7 +999,7 @@
     <div class="modal-actions">
       <button class="btn btn-ghost" id="mhCancel">İptal</button>
       <button class="btn btn-primary" id="mhSave">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v14a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v14a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
         Kaydet
       </button>
     </div>
@@ -976,16 +1018,13 @@
     <div class="modal-actions">
       <button class="btn btn-ghost" id="changePassCancel">İptal</button>
       <button class="btn btn-primary" id="changePassSubmit">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
         Değiştir
       </button>
     </div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     UYGULAMA KODU
-     ════════════════════════════════════════ -->
 <script>
 (function () {
   'use strict';
@@ -1026,20 +1065,20 @@
 
   /* ── SVG ikon seti ── */
   const IC = {
-    check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>`,
-    plus:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
-    trash: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>`,
-    edit:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12" aria-hidden="true"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
-    move:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12" aria-hidden="true"><polyline points="5 9 2 12 5 15"/><polyline points="9 5 12 2 15 5"/><line x1="2" y1="12" x2="22" y2="12"/><polyline points="15 19 12 22 9 19"/><polyline points="19 9 22 12 19 15"/><line x1="12" y1="2" x2="12" y2="22"/></svg>`,
-    clock: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
-    wa:    `<svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.99 2C6.468 2 2 6.467 2 11.99c0 1.975.578 3.837 1.594 5.414L2.05 22l4.694-1.497C8.213 21.437 10.064 22 11.99 22c5.523 0 9.99-4.468 9.99-9.99C21.98 6.467 17.513 2 11.99 2z"/></svg>`,
-    cal:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,
-    dollar:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>`,
-    alert: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
-    spin:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" style="animation:spin 1s linear infinite;display:block;margin:0 auto 6px;" aria-hidden="true"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg>`,
+    check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg>`,
+    plus:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
+    trash: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>`,
+    edit:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
+    move:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="5 9 2 12 5 15"/><polyline points="9 5 12 2 15 5"/><line x1="2" y1="12" x2="22" y2="12"/><polyline points="15 19 12 22 9 19"/><polyline points="19 9 22 12 19 15"/><line x1="12" y1="2" x2="12" y2="22"/></svg>`,
+    clock: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    wa:    `<svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.99 2C6.468 2 2 6.467 2 11.99c0 1.975.578 3.837 1.594 5.414L2.05 22l4.694-1.497C8.213 21.437 10.064 22 11.99 22c5.523 0 9.99-4.468 9.99-9.99C21.98 6.467 17.513 2 11.99 2z"/></svg>`,
+    cal:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,
+    dollar:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>`,
+    alert: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+    spin:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" style="animation:spin 1s linear infinite;display:block;margin:0 auto 6px;"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg>`,
   };
 
-  /* ── Yardımcı: HTML escape (XSS önleme) ── */
+  /* ── Yardımcılar ── */
   const esc = (v) => {
     if (v === null || v === undefined) return '';
     return String(v)
@@ -1050,10 +1089,8 @@
       .replace(/'/g, '&#039;');
   };
 
-  /* ── Yardımcı: sayıyı para olarak biçimlendir ── */
   const formatPrice = (v) => `${Number(v) || 0} TL`;
 
-  /* ── Yardımcı: güvenli localStorage ── */
   const LS = {
     get(key, fallback = null) {
       try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
@@ -1078,7 +1115,7 @@
     if (!name) return '';
     const parts = name.trim().split(' ');
     const firstName = parts[0] || '';
-    if (parts.length === 1) return firstName; // sadece ad varsa
+    if (parts.length === 1) return firstName;
     const lastNameFirstChar = parts[parts.length - 1].charAt(0).toUpperCase();
     return `${firstName} ${lastNameFirstChar}.XXX`;
   }
@@ -1092,13 +1129,13 @@
   /* ============================================ */
 
   /* ════════════════════════════════════
-     UYGULAMA DURUMU (tek kayıt noktası)
+     UYGULAMA DURUMU
      ════════════════════════════════════ */
   const State = {
     step:         1,
-    selected:     {},   // { [serviceId]: { ad, fiyat } }
-    date:         null, // "15 Ocak"
-    time:         null, // "10:00"
+    selected:     {},
+    date:         null,
+    time:         null,
     calMonth:     (() => { const d = new Date(); d.setDate(1); return d; })(),
     services:     [],
     appointments: [],
@@ -1111,7 +1148,7 @@
   };
 
   /* ════════════════════════════════════
-     VERİ KATMANI (Firebase + localStorage)
+     VERİ KATMANI
      ════════════════════════════════════ */
   const Store = {
     _db:        null,
@@ -1314,7 +1351,7 @@
     renderServices() {
       const grid = document.getElementById('hizmetGrid');
       if (!State.services.length) {
-        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/></svg><p>Henüz hizmet eklenmedi.</p></div>`;
+        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/></svg><p>Henüz hizmet eklenmedi.</p></div>`;
         return;
       }
       grid.innerHTML = State.services.map(s => {
@@ -1379,7 +1416,7 @@
 
       const firstDow  = new Date(y, m, 1).getDay();
       const daysTotal = new Date(y, m + 1, 0).getDate();
-      const offset    = (firstDow + 6) % 7; // Pazartesi = 0
+      const offset    = (firstDow + 6) % 7;
 
       let html = '';
       for (let i = 0; i < offset; i++) html += '<div class="day empty" aria-hidden="true"></div>';
@@ -1421,7 +1458,6 @@
       document.getElementById('ozToplam').textContent = formatPrice(total);
     },
 
-    // ***** DEĞİŞİKLİK: submit fonksiyonu (ad maskelenir, telefon son 4 hane kaydedilir) *****
     submit() {
       const adRaw = document.getElementById('musteriAd').value.trim();
       const telRaw = document.getElementById('musteriTel').value.trim();
@@ -1434,14 +1470,13 @@
       }
       if (!V.email(mail)) { Toast.err('Geçerli bir e-posta girin ya da boş bırakın.'); return false; }
 
-      // Adı maskeli hale getir: ilk ad + soyadın ilk harfi + .XXX
       const nameParts = adRaw.split(' ');
       const firstName = nameParts[0] || '';
       let maskedName = firstName;
       if (nameParts.length > 1) {
         const lastNameFirstChar = nameParts[nameParts.length - 1].charAt(0).toUpperCase();
         maskedName = `${firstName} ${lastNameFirstChar}.XXX`;
-      } // tek kelimeyse sadece ad kalır
+      }
 
       const svcs = Object.values(State.selected);
       const total = svcs.reduce((acc, v) => acc + (Number(v.fiyat) || 0), 0);
@@ -1450,8 +1485,8 @@
       const appt = {
         id: Date.now(),
         no,
-        musteriAd: maskedName,   // maskelenmiş ad
-        tel: telRaw,             // sadece son 4 hane
+        musteriAd: maskedName,
+        tel: telRaw,
         mail,
         services: svcs,
         total,
@@ -1571,7 +1606,6 @@
       }
     },
 
-    /* ── Pano ── */
     _dashboard() {
       const A        = State.appointments;
       const today    = new Date();
@@ -1611,7 +1645,6 @@
       </div>`;
     },
 
-    // ***** DEĞİŞİKLİK: randevu satırı (ad ve telefon maskelenir, WhatsApp butonu kaldırıldı) *****
     _apptRow(a) {
       const badge = a.paid
         ? `<button class="pay-btn paid" data-aid="${esc(a.id)}" aria-label="Ödeme durumunu değiştir">${IC.check} Ödendi</button>`
@@ -1633,13 +1666,12 @@
     _emptyRow(cols) {
       return `<tr><td colspan="${cols}">
         <div class="empty-state">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
           <p>Kayıt bulunamadı.</p>
         </div>
       </td></tr>`;
     },
 
-    /* ── Randevular ── */
     _randevular() {
       const filter = State.admin.filter.toLowerCase();
       const all    = [...State.appointments].reverse().filter(a =>
@@ -1653,7 +1685,7 @@
         <div class="page-hdr">
           <div class="page-title serif">Randevular</div>
           <div class="search-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input class="finput" id="adminSearch" placeholder="Ad veya tel ara…" value="${esc(State.admin.filter)}" autocomplete="off" aria-label="Randevu ara">
           </div>
         </div>
@@ -1668,11 +1700,11 @@
           </div>
           <div class="pagination">
             <button class="pg-btn" data-pg="${page - 1}" ${page === 1 ? 'disabled' : ''} aria-label="Önceki sayfa">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
             </button>
             <span class="pg-info" aria-live="polite">${page} / ${pages}</span>
             <button class="pg-btn" data-pg="${page + 1}" ${page >= pages ? 'disabled' : ''} aria-label="Sonraki sayfa">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
           </div>
         </div>`;
@@ -1688,7 +1720,6 @@
       });
     },
 
-    /* ── Hizmetler ── */
     _hizmetler() {
       const cards = State.services.map(s => `
         <div class="hizmet-card" style="cursor:default;">
@@ -1718,7 +1749,6 @@
         </div>`;
     },
 
-    /* ── Müşteriler (WhatsApp butonu kaldırıldı, ad ve telefon maskelenir) ── */
     _musteriler() {
       const map = new Map();
       State.appointments.forEach(a => {
@@ -1756,7 +1786,6 @@
         </div>`;
     },
 
-    /* ── Ayarlar ── */
     _ayarlar() {
       const connected   = Store.isFirebaseConnected();
       const fbCfgRaw    = LS.raw(STORAGE_KEYS.FB_CONFIG);
@@ -1777,7 +1806,7 @@
         <div class="page-hdr"><div class="page-title serif">Ayarlar</div></div>
         <div class="settings-block" style="margin-bottom:14px;border-color:rgba(196,151,58,.4);">
           <h3 style="display:flex;align-items:center;gap:8px;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" width="17" height="17" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" width="17" height="17"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
             Firebase Bulut Veritabanı
           </h3>
           ${fbStatusHtml}
@@ -1787,7 +1816,7 @@
             style="font-family:monospace;font-size:11.5px;resize:vertical;"
             aria-label="Firebase yapılandırma JSON">${esc(fbCfgRaw)}</textarea>
           <button class="btn btn-primary" id="btnSaveFbConfig" style="width:100%;justify-content:center;margin-top:10px;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
             Firebase Bağlantısını Kaydet
           </button>
           <div style="background:var(--bg3);border-radius:10px;padding:14px;margin-top:14px;">
@@ -1802,17 +1831,16 @@
         <div class="settings-block">
           <h3>Güvenlik</h3>
           <button class="btn btn-primary" id="btnChangePassword" style="margin-top:4px;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
             Şifre Değiştir
           </button>
           <button class="btn btn-danger" id="btnLogout" style="margin-top:8px;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" aria-hidden="true"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
             Oturumu Kapat
           </button>
         </div>`;
     },
 
-    /* ── Ödeme durumu ── */
     togglePayment(rawId) {
       const appt = State.appointments.find(a => a.id === Number(rawId));
       if (!appt) return;
@@ -1822,7 +1850,6 @@
       this.render(this._activePage());
     },
 
-    /* ── Randevu taşıma ── */
     openReschedule(rawId) {
       State.admin.pendingApptId = Number(rawId);
       Modal.open('modalTasi');
@@ -1845,7 +1872,6 @@
       }
     },
 
-    /* ── Hizmet silme ── */
     deleteService(rawId) {
       if (!confirm('Bu hizmeti silmek istediğinizden emin misiniz?')) return;
       State.services = State.services.filter(s => s.id !== Number(rawId));
@@ -1855,7 +1881,6 @@
       Booking.renderServices();
     },
 
-    /* ── Görsel önizleme ── */
     _setImgPreview(src) {
       const wrap   = document.getElementById('mhPreviewWrap');
       const imgEl  = document.getElementById('mhPreviewImg');
@@ -1876,7 +1901,6 @@
       this._setImgPreview('');
     },
 
-    /* ── Hizmet ekleme/düzenleme modal ── */
     openAdd() {
       State.admin.pendingServiceId = null;
       document.getElementById('mhTitle').textContent = 'Yeni Hizmet';
@@ -1925,9 +1949,6 @@
       Booking.renderServices();
     },
 
-    /* ── WhatsApp butonu kaldırıldığı için bu metod artık kullanılmıyor, ama kalabilir ── */
-    // whatsapp(tel) { ... } // silindi
-
     logout() {
       Auth.logout();
       UI.show('musteri');
@@ -1948,11 +1969,75 @@
     },
   };
 
+  /* ========== MÜZİK VE SES EFEKTLERİ ========== */
+  const audioTracks = [
+    'https://cdn.pixabay.com/audio/2023/07/03/audio_dcb1f6b6c0.mp3', // örnek 1
+    'https://cdn.pixabay.com/audio/2023/03/15/audio_6b8e8a5f9c.mp3', // örnek 2
+    'https://cdn.pixabay.com/audio/2022/10/18/audio_5a3f4c8b1d.mp3'  // örnek 3
+  ];
+  let currentTrackIndex = 0;
+  let audioPlayer = null;
+  let isMusicPlaying = false;
+  const successSoundUrl = 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_8a7f6e5d4c.mp3?filename=success-1-6297.mp3';
+
+  function initAudio() {
+    if (!audioPlayer) {
+      audioPlayer = new Audio();
+      audioPlayer.loop = false;
+      audioPlayer.addEventListener('ended', playNextTrack);
+    }
+  }
+
+  function playNextTrack() {
+    if (!isMusicPlaying) return;
+    currentTrackIndex = (currentTrackIndex + 1) % audioTracks.length;
+    audioPlayer.src = audioTracks[currentTrackIndex];
+    audioPlayer.play().catch(e => console.warn('Müzik çalınamadı:', e));
+  }
+
+  function toggleMusic() {
+    initAudio();
+    if (isMusicPlaying) {
+      audioPlayer.pause();
+      isMusicPlaying = false;
+      document.getElementById('musicText').innerText = 'Müziği Başlat';
+      document.getElementById('musicToggle').classList.remove('playing');
+    } else {
+      audioPlayer.src = audioTracks[currentTrackIndex];
+      audioPlayer.play()
+        .then(() => {
+          isMusicPlaying = true;
+          document.getElementById('musicText').innerText = 'Müziği Durdur';
+          document.getElementById('musicToggle').classList.add('playing');
+        })
+        .catch(e => {
+          console.warn('Müzik başlatılamadı:', e);
+          Toast.err('Müzik çalınamıyor. Tarayıcı izin vermeyebilir.');
+        });
+    }
+  }
+
+  function playSuccessSound() {
+    const sound = new Audio(successSoundUrl);
+    sound.play().catch(e => console.warn('Bildirim sesi çalınamadı:', e));
+  }
+
+  // Booking.submit'e ses ekle
+  const originalSubmit = Booking.submit;
+  Booking.submit = function() {
+    const result = originalSubmit.apply(this, arguments);
+    if (result) {
+      playSuccessSound();
+    }
+    return result;
+  };
+  /* ============================================ */
+
   /* ════════════════════════════════════
      OLAY BAĞLAYICILARI
      ════════════════════════════════════ */
   function bindEvents() {
-    // Telefon inputuna sadece rakam girişi ve maxlength 4
+    // Telefon input sınırlama
     const telInput = document.getElementById('musteriTel');
     if (telInput) {
       telInput.addEventListener('input', function(e) {
@@ -1960,7 +2045,10 @@
       });
     }
 
-    /* ── Ekran geçişi ── */
+    // Müzik butonu
+    document.getElementById('musicToggle').addEventListener('click', toggleMusic);
+
+    // Ekran geçişi
     document.getElementById('swMusteri').addEventListener('click', () => UI.show('musteri'));
     document.getElementById('swAdmin').addEventListener('click', async () => {
       if (await Auth.checkSession()) { UI.show('admin'); Admin.render('dashboard'); return; }
@@ -1973,7 +2061,7 @@
       }
     });
 
-    /* ── Giriş modal ── */
+    // Giriş modal
     const doLogin = async () => {
       const result = await Auth.login(document.getElementById('loginPass').value);
       if (result.ok)        { Modal.close('modalLogin'); UI.show('admin'); Admin.render('dashboard'); }
@@ -1984,7 +2072,7 @@
     document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
     document.getElementById('loginCancel').addEventListener('click', () => Modal.close('modalLogin'));
 
-    /* ── Şifre belirleme modal ── */
+    // Şifre belirleme
     document.getElementById('setPassSubmit').addEventListener('click', async () => {
       const p1 = document.getElementById('setPass1').value;
       const p2 = document.getElementById('setPass2').value;
@@ -1995,11 +2083,11 @@
     });
     document.getElementById('setPassCancel').addEventListener('click', () => Modal.close('modalSetPassword'));
 
-    /* ── Adım butonları ── */
+    // Adım butonları
     document.getElementById('btnDevam').addEventListener('click', () => Steps.next());
     document.getElementById('btnGeri').addEventListener('click',  () => Steps.prev());
 
-    /* ── Yeni randevu ── */
+    // Yeni randevu
     document.getElementById('btnYeniRandevu').addEventListener('click', () => {
       State.selected = {}; State.date = null; State.time = null; State.step = 1;
       ['musteriAd', 'musteriTel', 'musteriMail'].forEach(id => { document.getElementById(id).value = ''; });
@@ -2008,7 +2096,7 @@
       Steps._render();
     });
 
-    /* ── Hizmet seçimi (event delegation) ── */
+    // Hizmet seçimi
     document.getElementById('hizmetGrid').addEventListener('click', e => {
       const el = e.target.closest('[data-hid]');
       if (el) { e.stopPropagation(); Booking.toggleService(el.dataset.hid); }
@@ -2020,7 +2108,7 @@
       }
     });
 
-    /* ── Takvim ── */
+    // Takvim
     document.getElementById('calPrev').addEventListener('click', () => {
       State.calMonth.setMonth(State.calMonth.getMonth() - 1);
       Booking.renderCalendar();
@@ -2044,7 +2132,7 @@
       if (s) { State.time = s.dataset.t; Booking.renderTimes(); }
     });
 
-    /* ── Admin navigasyon ── */
+    // Admin navigasyon
     document.getElementById('adminNav').addEventListener('click', async e => {
       const item = e.target.closest('.nav-item[data-page]');
       if (!item) return;
@@ -2061,7 +2149,7 @@
       }
     });
 
-    /* ── Admin içerik eylemleri (event delegation) ── */
+    // Admin içerik eylemleri
     document.getElementById('adminContent').addEventListener('click', async e => {
       const pay  = e.target.closest('[data-aid]');   if (pay)  { Admin.togglePayment(pay.dataset.aid);      return; }
       const move = e.target.closest('[data-move]');  if (move) { Admin.openReschedule(move.dataset.move);   return; }
@@ -2084,7 +2172,7 @@
       if (e.target.closest('#btnLogout')) { Admin.logout(); return; }
     });
 
-    /* ── Şifre değiştirme modal ── */
+    // Şifre değiştirme modal
     document.getElementById('changePassSubmit').addEventListener('click', async () => {
       const old = document.getElementById('oldPass').value;
       const n1  = document.getElementById('newPass1').value;
@@ -2096,22 +2184,22 @@
     });
     document.getElementById('changePassCancel').addEventListener('click', () => Modal.close('modalChangePassword'));
 
-    /* ── Randevu taşıma ── */
+    // Randevu taşıma
     document.getElementById('tasiConfirm').addEventListener('click', () => Admin.confirmReschedule());
     document.getElementById('tasiCancel').addEventListener('click',  () => Modal.close('modalTasi'));
 
-    /* ── Hizmet kaydet/iptal ── */
+    // Hizmet kaydet/iptal
     document.getElementById('mhSave').addEventListener('click',   () => Admin.saveService());
     document.getElementById('mhCancel').addEventListener('click', () => Modal.close('modalHizmet'));
 
-    /* ── Dosya yükleme ── */
+    // Dosya yükleme
     document.getElementById('mhFile').addEventListener('change', e => handleImageFile(e.target.files[0]));
     const zone = document.getElementById('mhUploadZone');
     zone.addEventListener('dragover',  e => { e.preventDefault(); zone.classList.add('drag'); });
     zone.addEventListener('dragleave', ()  => zone.classList.remove('drag'));
     zone.addEventListener('drop',      e  => { e.preventDefault(); zone.classList.remove('drag'); handleImageFile(e.dataTransfer.files[0]); });
 
-    /* ── URL'den görsel yükle ── */
+    // URL'den görsel yükle
     document.getElementById('mhUrlLoad').addEventListener('click', () => {
       const url = document.getElementById('mhImgUrl').value.trim();
       if (!url || !V.url(url)) { Toast.err('Lütfen geçerli bir URL girin.'); return; }
@@ -2122,7 +2210,7 @@
     });
     document.getElementById('mhImgRemove').addEventListener('click', () => Admin._clearImgState());
 
-    /* ── Modal dışı tıklama ile kapat ── */
+    // Modal dışı tıklama
     document.querySelectorAll('.modal-bg').forEach(overlay => {
       overlay.addEventListener('click', e => {
         if (e.target !== overlay) return;
@@ -2131,7 +2219,7 @@
       });
     });
 
-    /* ── ESC ile modal kapat ── */
+    // ESC ile modal kapat
     document.addEventListener('keydown', e => {
       if (e.key !== 'Escape') return;
       document.querySelectorAll('.modal-bg.open').forEach(m => {
@@ -2149,7 +2237,7 @@
       Booking.renderServices();
       Steps._render();
       bindEvents();
-      console.info('%c ARYA Atelier v2.1 (Gizlilik Güncellemesi)', 'background:#c4973a;color:#07080f;font-weight:700;padding:4px 14px;border-radius:20px;font-size:13px;');
+      console.info('%c ARYA Atelier v2.2 (Müzikli & Gizlilik Notları)', 'background:#c4973a;color:#07080f;font-weight:700;padding:4px 14px;border-radius:20px;font-size:13px;');
     } catch (e) {
       console.error('[ARYA] Başlatma hatası:', e);
     }
